@@ -6,7 +6,14 @@
 
     <groupId>com.changgou</groupId>
     <artifactId>changgou_parent</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>changgou_gateway</module>
+        <module>changgou_service</module>
+        <module>changgou_service_api</module>
+        <module>changgou_web</module>
+    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
