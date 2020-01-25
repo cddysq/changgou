@@ -74,4 +74,12 @@ public interface BrandService {
      * @return 分页结果
      */
     Page<Brand> findPage(Map<String, Object> searchMap, Integer pageNum, Integer pageSize);
+
+    /**
+     * 根据分类名称查询品牌列表
+     *
+     * @param categoryName 分类名称
+     * @return 品牌列表
+     */
+    List<Map<String, Object>> findBrandListByCategoryName(String categoryName);
 }

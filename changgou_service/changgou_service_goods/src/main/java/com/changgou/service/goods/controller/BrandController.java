@@ -102,4 +102,13 @@ public class BrandController {
                         .total( pageList.getTotal() )
                         .rows( pageList.getResult() ).build() ).build();
     }
+
+    @GetMapping("/category/{categoryName}")
+    public Result<List<Map<String, Object>>> findBrandListByCategoryName(@PathVariable("categoryName") String categoryName) {
+        return Result.<List<Map<String, Object>>>builder()
+                .flag( true )
+                .code( StatusCode.OK )
+                .message( "查询成功" )
+                .data( brandService.findBrandListByCategoryName( categoryName ) ).build();
+    }
 }

@@ -73,6 +73,11 @@ public class BrandServiceImpl implements BrandService {
                 .doSelectPage( () -> brandMapper.selectByExample( getExample( searchMap ) ) );
     }
 
+    @Override
+    public List<Map<String, Object>> findBrandListByCategoryName(String categoryName) {
+        return brandMapper.findBrandListByCategoryName( categoryName );
+    }
+
     /**
      * 条件拼接
      *
