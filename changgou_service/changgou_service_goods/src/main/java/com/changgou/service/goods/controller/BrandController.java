@@ -18,6 +18,7 @@ import java.util.Map;
  * @Description: 品牌接口
  */
 @RestController
+@CrossOrigin //开启跨域访问
 @RequestMapping("/brand")
 public class BrandController {
     @Autowired
