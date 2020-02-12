@@ -5,6 +5,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.changgou.goods.pojo.Brand;
 import com.changgou.service.goods.dao.BrandMapper;
+import com.changgou.service.goods.entity.BrandStatusEnum;
+import com.changgou.service.goods.exception.GoodsException;
 import com.changgou.service.goods.service.BrandService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -40,6 +42,9 @@ public class BrandServiceImpl implements BrandService {
     @Override
     @Transactional
     public void addBrand(Brand brand) {
+        if (brandMapper.selectOne( brand ) != null) {
+            throw new GoodsException( BrandStatusEnum.BRAND_REPEAT );
+        }
         brandMapper.insertSelective( brand );
     }
 

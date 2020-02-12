@@ -1,7 +1,9 @@
 package com.changgou.service.goods.handler;
 
+import com.changgou.common.exception.ExceptionMessage;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
+import com.changgou.service.goods.exception.GoodsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,7 +18,15 @@ public class BaseExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Result<Object> error(Exception e) {
-        e.printStackTrace();
+        if (e instanceof GoodsException) {
+            //异常类型为自定义异常，抛出异常信息
+            GoodsException goodsException = (GoodsException) e;
+            ExceptionMessage message = goodsException.getExceptionMessage();
+            return Result.builder()
+                    .flag( message.isFlag() )
+                    .code( message.getCode() )
+                    .message( message.getMessage() ).build();
+        }
         return Result.builder()
                 .flag( false )
                 .code( StatusCode.ERROR )
