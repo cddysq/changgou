@@ -1,6 +1,8 @@
 package com.changgou.service.goods.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.changgou.goods.pojo.Brand;
 import com.changgou.service.goods.dao.BrandMapper;
 import com.changgou.service.goods.service.BrandService;
@@ -40,7 +42,6 @@ public class BrandServiceImpl implements BrandService {
     public void addBrand(Brand brand) {
         brandMapper.insertSelective( brand );
     }
-
 
     @Override
     @Transactional
@@ -88,12 +89,15 @@ public class BrandServiceImpl implements BrandService {
         Example example = new Example( Brand.class );
         Example.Criteria criteria = example.createCriteria();
         // 品牌名称
-        if (ObjectUtil.isNotEmpty( searchMap.get( "name" ) )) {
-            criteria.andLike( "name", "%" + searchMap.get( "name" ) + "%" );
+        String name = Convert.toStr( searchMap.get( "name" ) );
+        if (StrUtil.isNotEmpty( name )) {
+            criteria.andLike( "name", "%" + name + "%" );
         }
+
         // 品牌的首字母
-        if (ObjectUtil.isNotEmpty( searchMap.get( "letter" ) )) {
-            criteria.andEqualTo( "letter", searchMap.get( "letter" ) );
+        String letter = Convert.toStr( searchMap.get( "letter" ) );
+        if (StrUtil.isNotEmpty( letter )) {
+            criteria.andEqualTo( "letter", letter );
         }
         return example;
     }
