@@ -1,7 +1,7 @@
 package com.changgou.service.goods.service.impl;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.changgou.goods.pojo.Spec;
 import com.changgou.service.goods.dao.SpecMapper;
 import com.changgou.service.goods.service.SpecService;
@@ -93,24 +93,29 @@ public class SpecServiceImpl implements SpecService {
         Example.Criteria criteria = example.createCriteria();
         if (searchMap != null) {
             // 名称
-            if (ObjectUtil.isNotEmpty( searchMap.get( "name" ) )) {
-                criteria.andLike( "name", "%" + searchMap.get( "name" ) + "%" );
+            String name = Convert.toStr( searchMap.get( "name" ) );
+            if (StrUtil.isNotEmpty( name )) {
+                criteria.andLike( "name", "%" + name + "%" );
             }
             // 规格选项
-            if (ObjectUtil.isNotEmpty( searchMap.get( "options" ) )) {
-                criteria.andLike( "options", "%" + searchMap.get( "options" ) + "%" );
+            String options = Convert.toStr( searchMap.get( "options" ) );
+            if (StrUtil.isNotEmpty( options )) {
+                criteria.andLike( "options", "%" + options + "%" );
             }
             // ID
-            if (ObjectUtil.isNotEmpty( searchMap.get( "id" ) )) {
-                criteria.andEqualTo( "id", searchMap.get( "id" ) );
+            String id = Convert.toStr( searchMap.get( "id" ) );
+            if (StrUtil.isNotEmpty( id )) {
+                criteria.andEqualTo( "id", id );
             }
             // 排序
-            if (ObjectUtil.isNotEmpty( searchMap.get( "seq" ) )) {
-                criteria.andEqualTo( "seq", searchMap.get( "seq" ) );
+            String seq = Convert.toStr( searchMap.get( "seq" ) );
+            if (StrUtil.isNotEmpty( seq )) {
+                criteria.andEqualTo( "seq", seq );
             }
             // 模板ID
-            if (ObjectUtil.isNotEmpty( searchMap.get( "templateId" ) )) {
-                criteria.andEqualTo( "templateId", searchMap.get( "templateId" ) );
+            String templateId = Convert.toStr( searchMap.get( "templateId" ) );
+            if (StrUtil.isNotEmpty( templateId )) {
+                criteria.andEqualTo( "templateId", templateId );
             }
         }
         return example;
