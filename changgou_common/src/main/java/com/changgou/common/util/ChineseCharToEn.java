@@ -10,17 +10,12 @@ import java.io.UnsupportedEncodingException;
  * @Description: 取得给定汉字串的首字母串, 即声母串  注：只支持GB2312字符集中的汉字
  */
 public class ChineseCharToEn {
-    private volatile static ChineseCharToEn instance;
+    private static class SingletonClassInstance {
+        private static final ChineseCharToEn INSTANCE = new ChineseCharToEn();
+    }
 
     public static ChineseCharToEn getInstance() {
-        if (instance == null) {
-            synchronized (ChineseCharToEn.class) {
-                if (instance == null) {
-                    instance = new ChineseCharToEn();
-                }
-            }
-        }
-        return instance;
+        return SingletonClassInstance.INSTANCE;
     }
 
     private ChineseCharToEn() {
