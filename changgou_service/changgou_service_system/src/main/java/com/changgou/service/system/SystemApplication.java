@@ -1,4 +1,4 @@
-package com.changgou.system;
+package com.changgou.service.system;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,7 +12,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @SpringBootApplication
 @EnableEurekaClient
-@MapperScan(basePackages = {"com.changgou.system.dao"})
+@MapperScan(basePackages = {"com.changgou.service.system.dao"})
 public class SystemApplication {
     public static void main(String[] args) {
         SpringApplication.run( SystemApplication.class );

@@ -1,10 +1,10 @@
-package com.changgou.system.controller;
+package com.changgou.service.system.controller;
 
 import com.changgou.common.pojo.PageResult;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
+import com.changgou.service.system.service.AdminService;
 import com.changgou.system.pojo.Admin;
-import com.changgou.system.service.AdminService;
 import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,5 @@
-package com.changgou.system.service;
+package com.changgou.service.system.service;
+
 
 import com.changgou.system.pojo.Admin;
 import com.github.pagehelper.Page;

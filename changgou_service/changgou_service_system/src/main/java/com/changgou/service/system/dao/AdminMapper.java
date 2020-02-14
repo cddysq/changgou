@@ -1,4 +1,5 @@
-package com.changgou.system.dao;
+package com.changgou.service.system.dao;
+
 
 import com.changgou.system.pojo.Admin;
 import tk.mybatis.mapper.common.Mapper;

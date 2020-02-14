@@ -1,10 +1,10 @@
-package com.changgou.system.service.impl;
+package com.changgou.service.system.service.impl;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
-import com.changgou.system.dao.AdminMapper;
+import com.changgou.service.system.dao.AdminMapper;
+import com.changgou.service.system.service.AdminService;
 import com.changgou.system.pojo.Admin;
-import com.changgou.system.service.AdminService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
