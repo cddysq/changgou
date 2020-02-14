@@ -60,13 +60,6 @@ public class LoginLogServiceImpl implements LoginLogService {
     }
 
     @Override
-    public Page<LoginLog> findPage(Integer pageNum, Integer pageSize) {
-        return PageHelper
-                .startPage( pageNum, pageSize )
-                .doSelectPage( () -> loginLogMapper.selectAll() );
-    }
-
-    @Override
     public Page<LoginLog> findPage(@NotNull Map<String, Object> searchMap, Integer pageNum, Integer pageSize) {
         return PageHelper
                 .startPage( pageNum, pageSize )

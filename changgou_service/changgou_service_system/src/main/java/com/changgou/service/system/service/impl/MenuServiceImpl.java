@@ -60,13 +60,6 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public Page<Menu> findPage(Integer pageNum, Integer pageSize) {
-        return PageHelper
-                .startPage( pageNum, pageSize )
-                .doSelectPage( () -> menuMapper.selectAll() );
-    }
-
-    @Override
     public Page<Menu> findPage(@NotNull Map<String, Object> searchMap, Integer pageNum, Integer pageSize) {
         return PageHelper
                 .startPage( pageNum, pageSize )

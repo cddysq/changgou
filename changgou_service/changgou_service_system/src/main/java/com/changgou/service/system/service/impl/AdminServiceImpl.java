@@ -60,13 +60,6 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Page<Admin> findPage(Integer pageNum, Integer pageSize) {
-        return PageHelper
-                .startPage( pageNum, pageSize )
-                .doSelectPage( () -> adminMapper.selectAll() );
-    }
-
-    @Override
     public Page<Admin> findPage(@NotNull Map<String, Object> searchMap, Integer pageNum, Integer pageSize) {
         return PageHelper
                 .startPage( pageNum, pageSize )
