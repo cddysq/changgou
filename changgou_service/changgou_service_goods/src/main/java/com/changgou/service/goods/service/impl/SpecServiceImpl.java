@@ -36,19 +36,19 @@ public class SpecServiceImpl implements SpecService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addSpec(Spec spec) {
         specMapper.insertSelective( spec );
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateSpec(Spec spec) {
         specMapper.updateByPrimaryKey( spec );
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(Integer id) {
         specMapper.deleteByPrimaryKey( id );
     }

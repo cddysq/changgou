@@ -1,7 +1,6 @@
 package com.changgou.service.goods.service.impl;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.changgou.common.util.ChineseCharToEn;
 import com.changgou.goods.pojo.Brand;
