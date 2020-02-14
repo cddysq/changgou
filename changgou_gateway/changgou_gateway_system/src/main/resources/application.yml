@@ -23,7 +23,7 @@ spring:
               args:
                 key-resolver: "#{@ipKeyResolver}"
                 redis-rate-limiter.replenishRate: 1 #令牌桶每秒填充平均速率
-                redis-rate-limiter.burstCapacity: 1 #令牌桶总容量
+                redis-rate-limiter.burstCapacity: 10 #令牌桶总容量
         - id: system
           uri: lb://system
           predicates:
