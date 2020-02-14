@@ -58,15 +58,6 @@ public interface AdminService {
     List<Admin> findList(Map<String, Object> searchMap);
 
     /**
-     * 分页查询
-     *
-     * @param pageNum  当前页码
-     * @param pageSize 每页显示条数
-     * @return 分页结果
-     */
-    Page<Admin> findPage(Integer pageNum, Integer pageSize);
-
-    /**
      * 多条件分页查询
      *
      * @param searchMap 条件集合
