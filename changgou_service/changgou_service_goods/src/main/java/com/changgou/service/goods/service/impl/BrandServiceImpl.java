@@ -3,6 +3,7 @@ package com.changgou.service.goods.service.impl;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.changgou.common.util.ChineseCharToEn;
 import com.changgou.goods.pojo.Brand;
 import com.changgou.service.goods.dao.BrandMapper;
 import com.changgou.service.goods.entity.BrandStatusEnum;
@@ -40,22 +41,29 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addBrand(Brand brand) {
         if (brandMapper.selectOne( brand ) != null) {
             throw new GoodsException( BrandStatusEnum.BRAND_REPEAT );
+        }
+        String brandLetter = brand.getLetter();
+        //品牌首字母不存在时，自动获取品牌名第一个首字母
+        if (StrUtil.isEmpty( brandLetter )) {
+            ChineseCharToEn chineseCharToEn = ChineseCharToEn.getInstance();
+            String firstCapitalLetter = chineseCharToEn.getFirstCapitalLetter( brand.getName() );
+            brand.setLetter( firstCapitalLetter );
         }
         brandMapper.insertSelective( brand );
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateBrand(Brand brand) {
         brandMapper.updateByPrimaryKeySelective( brand );
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(Integer id) {
         brandMapper.deleteByPrimaryKey( id );
     }
