@@ -21,6 +21,7 @@ import java.io.Serializable;
 @Table(name = "tb_brand")
 public class Brand implements Serializable {
     private static final long serialVersionUID = -3606289835684702086L;
+
     /**
      * 品牌id
      */

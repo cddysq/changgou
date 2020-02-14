@@ -21,6 +21,7 @@ import java.io.Serializable;
 @Table(name = "tb_spec")
 public class Spec implements Serializable {
     private static final long serialVersionUID = -43670319100788900L;
+
     /**
      * 规格id
      */
