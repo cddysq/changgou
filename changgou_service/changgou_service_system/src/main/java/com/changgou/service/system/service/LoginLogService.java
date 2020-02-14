@@ -31,16 +31,16 @@ public interface LoginLogService {
     /**
      * 新增登录日志
      *
-     * @param LoginLog 登录日志数据
+     * @param loginLog 登录日志数据
      */
-    void addLoginLog(LoginLog LoginLog);
+    void addLoginLog(LoginLog loginLog);
 
     /**
      * 更新登录日志信息
      *
-     * @param LoginLog 登录日志数据
+     * @param loginLog 登录日志数据
      */
-    void updateLoginLog(LoginLog LoginLog);
+    void updateLoginLog(LoginLog loginLog);
 
     /**
      * 根据id删除登录日志信息
