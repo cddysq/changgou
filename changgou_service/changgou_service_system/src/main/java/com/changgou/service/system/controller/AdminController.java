@@ -4,11 +4,13 @@ import com.changgou.common.pojo.PageResult;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
 import com.changgou.service.system.service.AdminService;
+import com.changgou.service.system.util.JwtUtil;
 import com.changgou.system.pojo.Admin;
 import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -133,5 +135,27 @@ public class AdminController {
                 .data( PageResult.<Admin>builder()
                         .total( pageList.getTotal() )
                         .rows( pageList.getResult() ).build() ).build();
+    }
+
+    /**
+     * 用户登录
+     *
+     * @param admin 用户信息
+     * @return 是否登录成功
+     */
+    @PostMapping("/login")
+    public Result<Object> login(@RequestBody Admin admin) {
+        boolean result = adminService.login( admin );
+        if (result) {
+            return Result.builder()
+                    .flag( true )
+                    .code( StatusCode.OK )
+                    .message( "登录成功" ).build();
+        } else {
+            return Result.builder()
+                    .flag( false )
+                    .code( StatusCode.ERROR )
+                    .message( "用户名或密码错误" ).build();
+        }
     }
 }
