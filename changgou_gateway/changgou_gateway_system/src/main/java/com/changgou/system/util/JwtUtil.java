@@ -1,5 +1,6 @@
-package com.changgou.service.system.util;
+package com.changgou.system.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,7 +12,7 @@ import java.util.Date;
 
 /**
  * @Author: Haotian
- * @Date: 2020/2/15 11:22
+ * @Date: 2020/2/15 20:09
  * @Description: JWT工具类
  */
 public class JwtUtil {
@@ -65,10 +66,27 @@ public class JwtUtil {
     /**
      * 生成加密后的秘钥 secretKey
      *
-     * @return 加密key
+     * @return 加密后签名
      */
     public static SecretKey generalKey() {
         byte[] encodedKey = Base64.getDecoder().decode( JwtUtil.JWT_KEY );
         return new SecretKeySpec( encodedKey, 0, encodedKey.length, "AES" );
+    }
+
+    /**
+     * 解析令牌
+     *
+     * @param jwt 令牌
+     * @return 内容体
+     */
+    public static Claims parseJwt(String jwt) {
+        SecretKey secretKey = generalKey();
+        return Jwts.parser()
+                //设置签名
+                .setSigningKey( secretKey )
+                //设置令牌
+                .parseClaimsJws( jwt )
+                //获取内容
+                .getBody();
     }
 }
