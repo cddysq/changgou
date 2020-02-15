@@ -8,6 +8,7 @@ import com.changgou.system.pojo.Admin;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -39,12 +40,14 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addAdmin(Admin admin) {
+        bCryptPassword( admin );
         adminMapper.insertSelective( admin );
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateAdmin(Admin admin) {
+        bCryptPassword( admin );
         adminMapper.updateByPrimaryKeySelective( admin );
     }
 
@@ -69,6 +72,19 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public boolean login(Admin admin) {
         return false;
+    }
+
+    /**
+     * 加密密码
+     *
+     * @param admin 用户信息
+     */
+    private void bCryptPassword(Admin admin) {
+        //获取盐
+        String salt = BCrypt.gensalt();
+        //对用户的密码进行加密
+        String newPassword = BCrypt.hashpw( admin.getPassword(), salt );
+        admin.setPassword( newPassword );
     }
 
     /**

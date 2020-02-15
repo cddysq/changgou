@@ -77,14 +77,14 @@ public class ResourceServiceImpl implements ResourceService {
         Example.Criteria criteria = example.createCriteria();
         if (searchMap != null) {
             // res_key
-            String res_key = Convert.toStr( searchMap.get( "res_key" ) );
-            if (StrUtil.isNotEmpty( res_key )) {
-                criteria.andLike( "res_key", "%" + res_key + "%" );
+            String resKey = Convert.toStr( searchMap.get( "res_key" ) );
+            if (StrUtil.isNotEmpty( resKey )) {
+                criteria.andLike( "res_key", "%" + resKey + "%" );
             }
             // res_name
-            String res_name = Convert.toStr( searchMap.get( "res_name" ) );
-            if (StrUtil.isNotEmpty( res_name )) {
-                criteria.andLike( "res_name", "%" + res_name + "%" );
+            String resName = Convert.toStr( searchMap.get( "res_name" ) );
+            if (StrUtil.isNotEmpty( resName )) {
+                criteria.andLike( "res_name", "%" + resName + "%" );
             }
             // id
             String id = Convert.toStr( searchMap.get( "id" ) );
