@@ -97,9 +97,9 @@ public class MenuServiceImpl implements MenuService {
                 criteria.andLike( "url", "%" + url + "%" );
             }
             // 上级菜单ID
-            String parent_id = Convert.toStr( searchMap.get( "parent_id" ) );
-            if (StrUtil.isNotEmpty( parent_id )) {
-                criteria.andLike( "parent_id", "%" + parent_id + "%" );
+            String parentId = Convert.toStr( searchMap.get( "parent_id" ) );
+            if (StrUtil.isNotEmpty( parentId )) {
+                criteria.andLike( "parent_id", "%" + parentId + "%" );
             }
         }
         return example;

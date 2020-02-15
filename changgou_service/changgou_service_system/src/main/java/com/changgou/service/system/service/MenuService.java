@@ -57,7 +57,6 @@ public interface MenuService {
      */
     List<Menu> findList(Map<String, Object> searchMap);
 
-
     /**
      * 多条件分页查询
      *
