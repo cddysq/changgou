@@ -1,4 +1,4 @@
-package com.changgou.service.goods.handler;
+package com.changgou.service.goods.exception;
 
 import com.changgou.common.exception.ExceptionMessage;
 import com.changgou.common.pojo.Result;

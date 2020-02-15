@@ -1,4 +1,4 @@
-package com.changgou.service.goods.entity;
+package com.changgou.service.goods.constant;
 
 import com.changgou.common.exception.ExceptionMessage;
 import com.changgou.common.pojo.StatusCode;
