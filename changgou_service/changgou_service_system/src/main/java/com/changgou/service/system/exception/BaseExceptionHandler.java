@@ -3,7 +3,7 @@ package com.changgou.service.system.exception;
 import com.changgou.common.exception.ExceptionMessage;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
-import com.changgou.service.system.exception.AdminException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @Description: 公共异常处理
  */
 @ControllerAdvice
+@Slf4j
 public class BaseExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
@@ -27,9 +28,10 @@ public class BaseExceptionHandler {
                     .code( message.getCode() )
                     .message( message.getMessage() ).build();
         }
+        log.error( e.getMessage() );
         return Result.builder()
                 .flag( false )
                 .code( StatusCode.ERROR )
-                .message( e.getMessage() ).build();
+                .message( "系统异常，请稍后重试" ).build();
     }
 }
