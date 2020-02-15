@@ -1,5 +1,7 @@
 package com.changgou.service.system.controller;
 
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.IdUtil;
 import com.changgou.common.pojo.PageResult;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
@@ -10,7 +12,6 @@ import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -147,10 +148,15 @@ public class AdminController {
     public Result<Object> login(@RequestBody Admin admin) {
         boolean result = adminService.login( admin );
         if (result) {
+            String username = admin.getLoginName();
             return Result.builder()
                     .flag( true )
                     .code( StatusCode.OK )
-                    .message( "登录成功" ).build();
+                    .message( "登录成功" )
+                    //密码正确 生成jwt令牌,返回到客户端
+                    .data( MapUtil.builder()
+                            .put( "username", username )
+                            .put( "token", JwtUtil.createJwt( IdUtil.randomUUID(), username, null ) ).build() ).build();
         } else {
             return Result.builder()
                     .flag( false )
