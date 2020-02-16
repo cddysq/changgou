@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum BrandStatusEnum implements ExceptionMessage {
     BRAND_REPEAT(false, StatusCode.ERROR,"品牌已经存在" ),
-    BRAND_ERROR(false, StatusCode.ERROR,"品牌已经失效" );
+    GOODS_VANISH(false, StatusCode.ERROR,"当前商品不存在");
     private boolean flag;
     private Integer code;
     private String message;
