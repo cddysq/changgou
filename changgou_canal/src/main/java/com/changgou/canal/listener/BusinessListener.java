@@ -28,6 +28,7 @@ public class BusinessListener {
     @ListenPoint(schema = "changgou_business", table = "tb_ad")
     public void adUpdate(CanalEntry.EventType eventType, CanalEntry.RowData rowData) {
         log.info( "广告表数据发生改变" );
+        //TODO: 2020/2/18 20:31 广告位发生改变，删除原有缓存数据
         for (CanalEntry.Column column : rowData.getAfterColumnsList()) {
             if ("position".equals( column.getName() )) {
                 log.info( "发送最新的数据到MQ：{}", column.getValue() );
