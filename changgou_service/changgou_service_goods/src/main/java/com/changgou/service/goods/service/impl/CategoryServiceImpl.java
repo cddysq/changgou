@@ -53,21 +53,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<Category> findPage(Map<String, Object> searchMap, Integer pageNum, Integer pageSize) {
-        return null;
-    }
-
-    @Override
     public List<Category> findList(@NotNull Map<String, Object> searchMap) {
         return categoryMapper.selectByExample( getExample( searchMap ) );
     }
 
-//    @Override
-//    public Page<Category> findPage(@NotNull Map<String, Object> searchMap, Integer pageNum, Integer pageSize) {
-//        return PageHelper
-//                .startPage( pageNum, pageSize )
-//                .doSelectPage( () -> categoryMapper.selectByExample( getExample( searchMap ) ) );
-//    }
+    @Override
+    public Page<Category> findPage(@NotNull Map<String, Object> searchMap, Integer pageNum, Integer pageSize) {
+        return PageHelper
+                .startPage( pageNum, pageSize )
+                .doSelectPage( () -> categoryMapper.selectByExample( getExample( searchMap ) ) );
+    }
 
     /**
      * 条件拼接
@@ -79,6 +74,8 @@ public class CategoryServiceImpl implements CategoryService {
         Example example = new Example( Category.class );
         Example.Criteria criteria = example.createCriteria();
         if (searchMap != null) {
+            //TODO: 2020/2/18 21:46  代码优化
+
             // 分类名称
             if (searchMap.get( "name" ) != null && !"".equals( searchMap.get( "name" ) )) {
                 criteria.andLike( "name", "%" + searchMap.get( "name" ) + "%" );
@@ -91,7 +88,6 @@ public class CategoryServiceImpl implements CategoryService {
             if (searchMap.get( "isMenu" ) != null && !"".equals( searchMap.get( "isMenu" ) )) {
                 criteria.andLike( "isMenu", "%" + searchMap.get( "isMenu" ) + "%" );
             }
-
             // 分类ID
             if (searchMap.get( "id" ) != null) {
                 criteria.andEqualTo( "id", searchMap.get( "id" ) );
