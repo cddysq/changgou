@@ -1,0 +1,13 @@
+canal:
+  client:
+    instances:
+      example:
+        batchSize: 1000
+        host: 192.168.200.128
+        port: 11111
+spring:
+  rabbitmq:
+    host: 192.168.200.128
+  output:
+    ansi:
+      enabled: always
