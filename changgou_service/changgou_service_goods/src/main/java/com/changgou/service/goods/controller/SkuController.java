@@ -9,6 +9,7 @@ import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -133,5 +134,21 @@ public class SkuController {
                 .data( PageResult.<Sku>builder()
                         .total( pageList.getTotal() )
                         .rows( pageList.getResult() ).build() ).build();
+    }
+
+    /**
+     * 查询商品
+     *
+     * @param spuId 商品id
+     * @return 商品数据
+     */
+    @GetMapping("/spu/{spuId}")
+    public List<Sku> findSkuListBySpuId(@PathVariable("spuId") String spuId) {
+        Map<String, Object> searchMap = new HashMap<>(0);
+        if (!"all".equals( spuId )) {
+            searchMap.put( "spuId", spuId );
+        }
+        searchMap.put( "status", "1" );
+        return skuService.findList( searchMap );
     }
 }
