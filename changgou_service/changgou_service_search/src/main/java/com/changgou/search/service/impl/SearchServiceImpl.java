@@ -58,11 +58,23 @@ public class SearchServiceImpl implements SearchService {
             if (StrUtil.isNotEmpty( brand )) {
                 boolQueryBuilder.filter( QueryBuilders.termQuery( "brandName", brand ) );
             }
+            //按照规格进行过滤查询
+            for (String key : searchMap.keySet()) {
+                if (key.startsWith( "spec_" )) {
+                    String value = searchMap.get( key );
+                    //spec_黑色
+                    boolQueryBuilder.filter( QueryBuilders.termQuery( ("specMap." + key.substring( 5 ) + ".keyword"), value ) );
+                }
+            }
             nativeSearchQueryBuilder.withQuery( boolQueryBuilder );
+
 
             //按照品牌进行分组(聚合)查询
             String skuBrand = "skuBrand";
             nativeSearchQueryBuilder.addAggregation( AggregationBuilders.terms( skuBrand ).field( "brandName" ) );
+            //按照规格进行聚合查询
+            String skuSpec = "skuSpec";
+            nativeSearchQueryBuilder.addAggregation( AggregationBuilders.terms( skuSpec ).field( "spec.keyword" ) );
 
             //执行查询，返回结果
             AggregatedPage<SkuInfo> resultInfo = elasticsearchTemplate.queryForPage( nativeSearchQueryBuilder.build(), SkuInfo.class, new SearchResultMapper() {
@@ -90,6 +102,9 @@ public class SearchServiceImpl implements SearchService {
             //封装品牌的分组结果
             StringTerms brandTerms = (StringTerms) resultInfo.getAggregation( skuBrand );
             List<String> brandList = brandTerms.getBuckets().stream().map( StringTerms.Bucket::getKeyAsString ).collect( Collectors.toList() );
+            //封装规格分组结果
+            StringTerms specTerms = (StringTerms) resultInfo.getAggregation( skuSpec );
+            List<String> specList = specTerms.getBuckets().stream().map( StringTerms.Bucket::getKeyAsString ).collect( Collectors.toList() );
 
             return MapUtil.<String, Object>builder()
                     //封装总记录数
@@ -100,6 +115,8 @@ public class SearchServiceImpl implements SearchService {
                     .put( "rows", resultInfo.getContent() )
                     //封装品牌聚合结果
                     .put( "brandList", brandList )
+                    //封装规格聚合结果
+                    .put( "specList", specList )
                     .build();
         }
         return null;
