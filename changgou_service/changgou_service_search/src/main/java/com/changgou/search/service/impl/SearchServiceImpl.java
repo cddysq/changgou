@@ -66,6 +66,17 @@ public class SearchServiceImpl implements SearchService {
                     boolQueryBuilder.filter( QueryBuilders.termQuery( ("specMap." + key.substring( 5 ) + ".keyword"), value ) );
                 }
             }
+            //按照价格进行区间过滤查询
+            String price = searchMap.get( "price" );
+            if (StrUtil.isNotEmpty( price )) {
+                String[] prices = price.split( "-" );
+                //长度如为一 500/100 大于
+                boolQueryBuilder.filter( QueryBuilders.rangeQuery( "price" ).gte( prices[0] ) );
+                //长度如为二 500-1000/1000-2000 小于最后一个元素
+                if (prices.length == 2) {
+                    boolQueryBuilder.filter( QueryBuilders.rangeQuery( "price" ).lte( prices[1] ) );
+                }
+            }
             nativeSearchQueryBuilder.withQuery( boolQueryBuilder );
 
 
