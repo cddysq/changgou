@@ -40,3 +40,6 @@ hystrix:
           enabled: false
         isolation:
           strategy: SEMAPHORE
+logging:
+  level:
+    com.changgou.search: debug
