@@ -16,6 +16,7 @@ import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.SearchResultMapper;
@@ -87,6 +88,19 @@ public class SearchServiceImpl implements SearchService {
             String skuSpec = "skuSpec";
             nativeSearchQueryBuilder.addAggregation( AggregationBuilders.terms( skuSpec ).field( "spec.keyword" ) );
 
+            //设置分页数据
+            String pageNum = searchMap.get( "pageNum" );
+            String pageSize = searchMap.get( "pageSize" );
+            if (StrUtil.isEmpty( pageNum )) {
+                //当前页码为空，默认第一页
+                pageNum = "1";
+            }
+            if (StrUtil.isEmpty( pageSize )) {
+                //每页显示条数为空，默认30条
+                pageSize = "30";
+            }
+            nativeSearchQueryBuilder.withPageable( PageRequest.of( Integer.parseInt( pageNum ), Integer.parseInt( pageSize ) ) );
+
             //执行查询，返回结果
             AggregatedPage<SkuInfo> resultInfo = elasticsearchTemplate.queryForPage( nativeSearchQueryBuilder.build(), SkuInfo.class, new SearchResultMapper() {
                 @Override
@@ -128,6 +142,8 @@ public class SearchServiceImpl implements SearchService {
                     .put( "brandList", brandList )
                     //封装规格聚合结果
                     .put( "specList", specList )
+                    //封装当前页码
+                    .put( "pageNum", pageNum )
                     .build();
         }
         return null;
