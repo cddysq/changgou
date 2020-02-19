@@ -15,6 +15,8 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -100,6 +102,21 @@ public class SearchServiceImpl implements SearchService {
                 pageSize = "30";
             }
             nativeSearchQueryBuilder.withPageable( PageRequest.of( Integer.parseInt( pageNum ), Integer.parseInt( pageSize ) ) );
+
+            //设置排序
+            //要排序的域
+            String sortField = searchMap.get( "sortField" );
+            //要排序的规则
+            String sortRule = searchMap.get( "sortRule" );
+            if (StrUtil.isNotEmpty( sortField ) && StrUtil.isNotEmpty( sortRule )) {
+                if ("ASC".equals( sortRule )) {
+                    //升序
+                    nativeSearchQueryBuilder.withSort( SortBuilders.fieldSort( sortField ).order( SortOrder.ASC ) );
+                } else {
+                    //降序
+                    nativeSearchQueryBuilder.withSort( SortBuilders.fieldSort( sortField ).order( SortOrder.DESC ) );
+                }
+            }
 
             //执行查询，返回结果
             AggregatedPage<SkuInfo> resultInfo = elasticsearchTemplate.queryForPage( nativeSearchQueryBuilder.build(), SkuInfo.class, new SearchResultMapper() {
