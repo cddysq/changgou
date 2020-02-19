@@ -16,12 +16,14 @@ public class RabbitMQConfig {
      * 定义交换机名称
      */
     public static final String GOODS_UP_EXCHANGE = "goods_up_exchange";
+    public static final String GOODS_DOWN_EXCHANGE = "goods_down_exchange";
 
     /**
      * 定义队列名称
      */
     public static final String AD_UPDATE_QUEUE = "ad_update_queue";
     public static final String SEARCH_ADD_QUEUE = "search_add_queue";
+    public static final String SEARCH_DEL_QUEUE = "search_del_queue";
 
     /**
      * 声明队列
@@ -34,8 +36,14 @@ public class RabbitMQConfig {
 
     @Bean(SEARCH_ADD_QUEUE)
     public Queue search_add_queue() {
-        //商品队列
+        //商品上架队列
         return new Queue( SEARCH_ADD_QUEUE );
+    }
+
+    @Bean(SEARCH_DEL_QUEUE)
+    public Queue search_del_queue() {
+        //商品下架队列
+        return new Queue( SEARCH_DEL_QUEUE );
     }
 
     /**
@@ -43,8 +51,14 @@ public class RabbitMQConfig {
      */
     @Bean(GOODS_UP_EXCHANGE)
     public Exchange goods_up_exchange() {
-        //商品交换机
+        //商品上架交换机
         return ExchangeBuilder.fanoutExchange( GOODS_UP_EXCHANGE ).durable( true ).build();
+    }
+
+    @Bean(GOODS_DOWN_EXCHANGE)
+    public Exchange goods_down_exchange() {
+        //商品下架交换机
+        return ExchangeBuilder.fanoutExchange( GOODS_DOWN_EXCHANGE ).durable( true ).build();
     }
 
     /**
@@ -52,6 +66,11 @@ public class RabbitMQConfig {
      */
     @Bean
     public Binding goods_up_exchange_binding(@Qualifier(SEARCH_ADD_QUEUE) Queue queue, @Qualifier(GOODS_UP_EXCHANGE) Exchange exchange) {
+        return BindingBuilder.bind( queue ).to( exchange ).with( "" ).noargs();
+    }
+
+    @Bean
+    public Binding goods_down_exchange_binding(@Qualifier(SEARCH_DEL_QUEUE) Queue queue, @Qualifier(GOODS_DOWN_EXCHANGE) Exchange exchange) {
         return BindingBuilder.bind( queue ).to( exchange ).with( "" ).noargs();
     }
 

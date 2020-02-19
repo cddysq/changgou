@@ -12,9 +12,16 @@ public interface EsManagerService {
     void importAll();
 
     /**
-     * 根据spuid查询skuList,再导入索引库
+     * 根据spuid查询skuList,添加进索引库
      *
      * @param spuId 商品id
      */
     void importDataBySpuId(String spuId);
+
+    /**
+     * 根据spuid查询skuList,从索引库删除
+     *
+     * @param spuId 商品id
+     */
+    void delDataBySpuId(String spuId);
 }

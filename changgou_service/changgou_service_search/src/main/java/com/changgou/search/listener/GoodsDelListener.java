@@ -9,19 +9,19 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Author: Haotian
- * @Date: 2020/2/18 23:53
- * @Description: 商品上架监听
- */
+ * @Date: 2020/2/19 17:30
+ * @Description: 商品下架监听
+ **/
 @Component
 @Slf4j
-public class GoodsUpListener {
+public class GoodsDelListener {
     @Autowired
     private EsManagerService esManagerService;
 
     @RabbitListener(queues = RabbitMQConfig.SEARCH_ADD_QUEUE)
     public void receiveMessage(String spuId) {
-        log.info( "接收到新上架商品id：{}", spuId );
-        //查询skuList,并导入到索引库
-        esManagerService.importDataBySpuId( spuId );
+        log.info( "接收到新下架商品id：{}", spuId );
+        //查询skuList,并从索引库删除数据
+        esManagerService.delDataBySpuId( spuId );
     }
 }

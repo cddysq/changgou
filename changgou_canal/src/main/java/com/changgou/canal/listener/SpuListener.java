@@ -40,5 +40,12 @@ public class SpuListener {
             //将商品的spu id发送到mq
             rabbitTemplate.convertAndSend( RabbitMQConfig.GOODS_UP_EXCHANGE, "", newData.get( "id" ) );
         }
+
+        //获取最新下架的商品,只有满足状态 1 → 0 才能称其为下架
+        if ("1".equals( oldData.get( STATE_OF_GOODS ) ) && "0".equals( newData.get( STATE_OF_GOODS ) )) {
+            log.info( "监听到新下架商品id：{}", newData.get( "id" ) );
+            //将商品的spu id发送到mq
+            rabbitTemplate.convertAndSend( RabbitMQConfig.GOODS_DOWN_EXCHANGE, "", newData.get( "id" ) );
+        }
     }
 }

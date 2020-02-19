@@ -1,6 +1,7 @@
 package com.changgou.search.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.changgou.goods.feign.SkuFeign;
@@ -40,6 +41,17 @@ public class EsManagerServiceImpl implements EsManagerService {
     public void importDataBySpuId(String spuId) {
         List<Sku> skuList = skuFeign.findSkuListBySpuId( spuId );
         this.covertAdd( skuList );
+    }
+
+    @Override
+    public void delDataBySpuId(String spuId) {
+        List<Sku> skuList = skuFeign.findSkuListBySpuId( spuId );
+        if (CollUtil.isEmpty( skuList )) {
+            throw new RuntimeException( "当前没有数据被查询到,无法导入索引库" );
+        }
+        for (Sku sku : skuList) {
+            esManagerMapper.deleteById( Convert.toLong( sku.getId() ) );
+        }
     }
 
     /**
