@@ -15,6 +15,8 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +120,16 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
 
+            //设置高亮域以及高亮的样式
+            HighlightBuilder.Field field = new HighlightBuilder
+                    //高亮域
+                    .Field( "name" )
+                    //高亮样式的前缀
+                    .preTags( "<span style='color:red'>" )
+                    //高亮样式的后缀
+                    .postTags( "</span>" );
+            nativeSearchQueryBuilder.withHighlightFields( field );
+
             //执行查询，返回结果
             AggregatedPage<SkuInfo> resultInfo = elasticsearchTemplate.queryForPage( nativeSearchQueryBuilder.build(), SkuInfo.class, new SearchResultMapper() {
                 @Override
@@ -130,6 +142,11 @@ public class SearchServiceImpl implements SearchService {
                         for (SearchHit hit : hits) {
                             //数据转换为skuInfo
                             SkuInfo skuInfo = JSON.parseObject( hit.getSourceAsString(), SkuInfo.class );
+                            Map<String, HighlightField> highlightFields = hit.getHighlightFields();
+                            if (ObjectUtil.isNotEmpty( highlightFields )) {
+                                //有高亮内容，替换数据
+                                skuInfo.setName( highlightFields.get( "name" ).getFragments()[0].string() );
+                            }
                             list.add( (T) skuInfo );
                         }
                     }
