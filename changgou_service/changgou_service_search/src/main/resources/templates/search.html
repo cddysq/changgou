@@ -637,102 +637,42 @@
                     <a href="javascript:void(0);">更多</a>
                 </div>
             </div>
-            <div class="type-wrap">
-                <div class="fl key">网络制式</div>
+            <!--规格不存在进行显示-->
+            <div class="type-wrap" th:each="spec,specStat:${result.specList}"
+                 th:unless="${#maps.containsKey(searchMap,'spec_'+spec.key)}">
+                <div class="fl key" th:text="${spec.key}">
+                </div>
                 <div class="fl value">
                     <ul class="type-list">
-                        <li>
-                            <a>GSM（移动/联通2G）</a>
-                        </li>
-                        <li>
-                            <a>电信2G</a>
-                        </li>
-                        <li>
-                            <a>电信3G</a>
-                        </li>
-                        <li>
-                            <a>移动3G</a>
-                        </li>
-                        <li>
-                            <a>联通3G</a>
-                        </li>
-                        <li>
-                            <a>联通4G</a>
-                        </li>
-                        <li>
-                            <a>电信3G</a>
-                        </li>
-                        <li>
-                            <a>移动3G</a>
-                        </li>
-                        <li>
-                            <a>联通3G</a>
-                        </li>
-                        <li>
-                            <a>联通4G</a>
+                        <li th:each="op,opStat:${spec.value}">
+                            <a th:text="${op}"></a>
                         </li>
                     </ul>
                 </div>
                 <div class="fl ext"></div>
             </div>
-            <div class="type-wrap">
-                <div class="fl key">显示屏尺寸</div>
-                <div class="fl value">
-                    <ul class="type-list">
-                        <li>
-                            <a>4.0-4.9英寸</a>
-                        </li>
-                        <li>
-                            <a>4.0-4.9英寸</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="fl ext"></div>
-            </div>
-            <div class="type-wrap">
-                <div class="fl key">摄像头像素</div>
-                <div class="fl value">
-                    <ul class="type-list">
-                        <li>
-                            <a>1200万以上</a>
-                        </li>
-                        <li>
-                            <a>800-1199万</a>
-                        </li>
-                        <li>
-                            <a>1200-1599万</a>
-                        </li>
-                        <li>
-                            <a>1600万以上</a>
-                        </li>
-                        <li>
-                            <a>无摄像头</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="fl ext"></div>
-            </div>
+            <!--价格显示-->
             <div class="type-wrap">
                 <div class="fl key">价格</div>
                 <div class="fl value">
                     <ul class="type-list">
                         <li>
-                            <a>0-500元</a>
+                            <a th:text="0-500元"></a>
                         </li>
                         <li>
-                            <a>500-1000元</a>
+                            <a th:text="500-1000元"></a>
                         </li>
                         <li>
-                            <a>1000-1500元</a>
+                            <a th:text="1000-1500元"></a>
                         </li>
                         <li>
-                            <a>1500-2000元</a>
+                            <a th:text="1500-2000元"></a>
                         </li>
                         <li>
-                            <a>2000-3000元 </a>
+                            <a th:text="2000-3000元"></a>
                         </li>
                         <li>
-                            <a>3000元以上</a>
+                            <a th:text="3000元以上"></a>
                         </li>
                     </ul>
                 </div>

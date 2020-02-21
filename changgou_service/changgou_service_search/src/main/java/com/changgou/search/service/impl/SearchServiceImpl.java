@@ -1,5 +1,6 @@
 package com.changgou.search.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -29,9 +30,7 @@ import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPa
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -176,11 +175,54 @@ public class SearchServiceImpl implements SearchService {
                     //封装品牌聚合结果
                     .put( "brandList", brandList )
                     //封装规格聚合结果
-                    .put( "specList", specList )
+                    .put( "specList", this.formartSpec( specList ) )
                     //封装当前页码
                     .put( "pageNum", pageNum )
                     .build();
         }
         return null;
+    }
+
+    /**
+     * <pre>原有数据:
+     *     [
+     *      "{'颜色': '黑色', '尺码': '平光防蓝光-无度数电脑手机护目镜'}",
+     *      "{'颜色': '红色', '尺码': '150度'}",
+     *     ]
+     * 需要的数据格式:
+     *         {
+     *            颜色:[黑色,红色],
+     *            尺码:[100度,150度]
+     *         }</pre>
+     *
+     * @param specList 规格数据
+     * @return 转换后的map
+     */
+    public Map<String, Set<String>> formartSpec(List<String> specList) {
+        Map<String, Set<String>> resultMap = new HashMap<>();
+        if (CollUtil.isNotEmpty( specList )) {
+            //specJsonString={'颜色': '蓝色', '版本': '6GB+128GB'}
+            for (String specJsonString : specList) {
+                /*将json数据转换为map
+                map={
+                    key=颜色 value=蓝色
+                    key=版本 value=6GB+128GB
+                }*/
+                Map<String, String> specMap = JSON.parseObject( specJsonString, Map.class );
+                for (String specKey : specMap.keySet()) {
+                    //拿到每一个key {颜色,版本}
+                    Set<String> specSet = resultMap.get( specKey );
+                    //判断是否在map中存在此key的set
+                    if (specSet == null) {
+                        specSet = new HashSet<String>();
+                    }
+                    //将规格的值放入set中 {蓝色}{6GB+128GB}
+                    specSet.add( specMap.get( specKey ) );
+                    //将set放入map中 {key=颜色，value=set{蓝色}}{key=版本，value=set{6GB+128GB}}
+                    resultMap.put( specKey, specSet );
+                }
+            }
+        }
+        return resultMap;
     }
 }
