@@ -34,7 +34,7 @@ public class SearchController {
         //封装查询条件返回
         model.addAttribute( "searchMap", searchMap );
         //封装查询数据返回
-        model.addAttribute( "resultMap", resultMap );
+        model.addAttribute( "result", resultMap );
         return "search";
     }
 

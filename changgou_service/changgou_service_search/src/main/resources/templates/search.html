@@ -622,28 +622,14 @@
         </div>
         <!--selector-->
         <div class="clearfix selector">
-            <div class="type-wrap logo">
+            <!-- unless 与 if 相反，不存在显示所有品牌-->
+            <div class="type-wrap logo" th:unless="${#maps.containsKey(searchMap,'brand')}">
                 <div class="fl key brand">品牌</div>
                 <div class="value logos">
                     <ul class="logo-list">
-                        <li>索尼（SONY）</li>
-                        <li>TCL</li>
-                        <li>长虹（CHANGHONG）</li>
-                        <li>飞利浦（PHILIPS）</li>
-                        <li>风行电视</li>
-                        <li><img src="/img/_/phone06.png"/></li>
-                        <li><img src="/img/_/phone07.png"/></li>
-                        <li><img src="/img/_/phone08.png"/></li>
-                        <li><img src="/img/_/phone09.png"/></li>
-                        <li><img src="/img/_/phone10.png"/></li>
-                        <li><img src="/img/_/phone11.png"/></li>
-                        <li><img src="/img/_/phone12.png"/></li>
-                        <li><img src="/img/_/phone12.png"/></li>
-                        <li><img src="/img/_/phone14.png"/></li>
-                        <li><img src="/img/_/phone01.png"/></li>
-                        <li><img src="/img/_/phone06.png"/></li>
-                        <li><img src="/img/_/phone07.png"/></li>
-                        <li><img src="/img/_/phone02.png"/></li>
+                        <li th:each="brand,brandState:${result.brandList}">
+                            <a th:text="${brand}"></a>
+                        </li>
                     </ul>
                 </div>
                 <div class="ext">
