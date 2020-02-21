@@ -16,6 +16,8 @@ spring:
   output:
     ansi:
       enabled: always
+  thymeleaf:
+    cache: false
 eureka:
   client:
     service-url:
