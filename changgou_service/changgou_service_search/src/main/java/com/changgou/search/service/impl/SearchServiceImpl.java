@@ -66,6 +66,7 @@ public class SearchServiceImpl implements SearchService {
             //按照规格进行过滤查询
             for (String key : searchMap.keySet()) {
                 if (key.startsWith( "spec_" )) {
+                    /*String value = searchMap.get( key ).replace( "%2B","+" );*/
                     String value = searchMap.get( key );
                     //spec_黑色
                     boolQueryBuilder.filter( QueryBuilders.termQuery( ("specMap." + key.substring( 5 ) + ".keyword"), value ) );
@@ -103,7 +104,7 @@ public class SearchServiceImpl implements SearchService {
                 //每页显示条数为空，默认30条
                 pageSize = "30";
             }
-            nativeSearchQueryBuilder.withPageable( PageRequest.of( Integer.parseInt( pageNum ), Integer.parseInt( pageSize ) ) );
+            nativeSearchQueryBuilder.withPageable( PageRequest.of( Integer.parseInt( pageNum ) - 1, Integer.parseInt( pageSize ) ) );
 
             //设置排序
             //要排序的域
