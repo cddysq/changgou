@@ -598,19 +598,18 @@
                 <!-- 判断显示品牌-->
                 <li class="with-x" th:if="${#maps.containsKey(searchMap,'brand')}">
                     品牌:<span th:text="${searchMap.brand}"></span>
-                    <i>×</i>
+                    <a th:href="@{${#strings.replace(url,'&brand='+searchMap.brand,'')}}">×</a>
                 </li>
                 <!-- 判断显示价格-->
                 <li class="with-x" th:if="${#maps.containsKey(searchMap,'price')}">
                     价格:<span th:text="${searchMap.price}"></span>
-                    <i>×</i>
+                    <a th:href="@{${#strings.replace(url,'&price='+searchMap.price,'')}}">×</a>
                 </li>
                 <!--判断显示规格-->
                 <li class="with-x" th:each="sm:${searchMap}" th:if="${#strings.startsWith(sm.key,'spec_')}">
                     <span th:text="${#strings.replace(sm.key,'spec_','')}"></span>:
-                    <!--<span th:text="${#strings.replace(sm.value,'%2B','+')}"></span>-->
-                    <span th:text="${sm.value}"></span>
-                    <i>×</i>
+                    <span th:text="${#strings.replace(sm.value,'%2B','+')}"></span>
+                    <a th:href="@{${#strings.replace(url,'&'+sm.key+'='+sm.value,'')}}">×</a>
                 </li>
             </ul>
             <form class="fl sui-form form-dark">
@@ -628,7 +627,7 @@
                 <div class="value logos">
                     <ul class="logo-list">
                         <li th:each="brand,brandState:${result.brandList}">
-                            <a th:text="${brand}"></a>
+                            <a th:text="${brand}" th:href="@{${url}(brand=${brand})}"></a>
                         </li>
                     </ul>
                 </div>
@@ -645,7 +644,7 @@
                 <div class="fl value">
                     <ul class="type-list">
                         <li th:each="op,opStat:${spec.value}">
-                            <a th:text="${op}"></a>
+                            <a th:text="${op}" th:href="@{${url}('spec_'+${spec.key}=${op})}"></a>
                         </li>
                     </ul>
                 </div>
@@ -657,22 +656,22 @@
                 <div class="fl value">
                     <ul class="type-list">
                         <li>
-                            <a th:text="0-500元"></a>
+                            <a th:text="0-500元" th:href="@{${url}(price='0-500')}"></a>
                         </li>
                         <li>
-                            <a th:text="500-1000元"></a>
+                            <a th:text="500-1000元" th:href="@{${url}(price='500-1000')}"></a>
                         </li>
                         <li>
-                            <a th:text="1000-1500元"></a>
+                            <a th:text="1000-1500元" th:href="@{${url}(price='1000-1500')}"></a>
                         </li>
                         <li>
-                            <a th:text="1500-2000元"></a>
+                            <a th:text="1500-2000元" th:href="@{${url}(price='1500-2000')}"></a>
                         </li>
                         <li>
-                            <a th:text="2000-3000元"></a>
+                            <a th:text="2000-3000元" th:href="@{${url}(price='2000-3000')}"></a>
                         </li>
                         <li>
-                            <a th:text="3000元以上"></a>
+                            <a th:text="3000元以上" th:href="@{${url}(price='3000')}"></a>
                         </li>
                     </ul>
                 </div>
