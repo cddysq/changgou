@@ -735,7 +735,8 @@
                     <li class="yui3-u-1-5" th:each="sku,skuStat:${result.rows}">
                         <div class="list-wrap">
                             <div class="p-img">
-                                <a href="item.html" target="_blank"><img th:src="${sku.image}"/></a>
+                                <!--<a th:href="http://192.168.200.128/+${sku.spuId}+'.html'" target="_blank"><img th:src="${sku.image}"/></a>-->
+                                <a th:href="'http://192.168.200.128/10000011705700.html'" target="_blank"><img th:src="${sku.image}"/></a>
                             </div>
                             <div class="price">
                                 <strong>
@@ -744,7 +745,7 @@
                                 </strong>
                             </div>
                             <div class="attr">
-                                <a target="_blank" href="item.html" th:title="${sku.spec}" th:utext="${sku.name}"></a>
+                                <a target="_blank" th:href="'http://192.168.200.128/10000011705700.html'" th:title="${sku.spec}" th:utext="${sku.name}"></a>
                             </div>
                             <div class="commit">
                                 <i class="command">已有<span>2000</span>人评价</i>
