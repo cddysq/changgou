@@ -2,6 +2,7 @@ package com.changgou.page.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.changgou.goods.feign.CategoryFeign;
 import com.changgou.goods.feign.SkuFeign;
 import com.changgou.goods.feign.SpuFeign;
@@ -88,7 +89,7 @@ public class PageServiceImpl implements PageService {
         if (ObjectUtil.isNotEmpty( spu )) {
             String images = spu.getImages();
             if (StrUtil.isNotEmpty( images )) {
-                map.put( "imagesList", images.split( "," ) );
+                map.put( "imageList", images.split( "," ) );
             }
         }
         //获取商品三级分类信息
@@ -101,6 +102,8 @@ public class PageServiceImpl implements PageService {
         //获取sku的相关信息
         List<Sku> skuList = skuFeign.findSkuListBySpuId( spuId );
         map.put( "skuList", skuList );
+        //规格信息处理
+        map.put( "specificationList", JSON.parseObject( spu.getParaItems(), Map.class ) );
 
         return map;
     }
