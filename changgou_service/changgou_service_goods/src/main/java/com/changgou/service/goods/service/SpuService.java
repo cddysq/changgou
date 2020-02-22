@@ -21,6 +21,14 @@ public interface SpuService {
     List<Spu> findAll();
 
     /**
+     * 根据ID查询SPU
+     *
+     * @param id Spu id
+     * @return Spu信息
+     */
+    Spu findById(String id);
+
+    /**
      * 根据id查询Spu和sku数据
      *
      * @param id Spu id

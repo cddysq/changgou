@@ -40,6 +40,21 @@ public class SpuController {
     }
 
     /**
+     * 根据ID查询Spu数据
+     *
+     * @param id Spu id
+     * @return Spu信息集合
+     */
+    @GetMapping("/findSpuById/{id}")
+    public Result<Spu> findSpuById(@PathVariable("id") String id) {
+        return Result.<Spu>builder()
+                .flag( true )
+                .code( StatusCode.OK )
+                .message( "查询成功" )
+                .data( spuService.findById( id ) ).build();
+    }
+
+    /**
      * 根据ID查询Spu与Sku数据
      *
      * @param id Spu id

@@ -51,6 +51,11 @@ public class SpuServiceImpl implements SpuService {
     }
 
     @Override
+    public Spu findById(String id) {
+        return spuMapper.selectByPrimaryKey( id );
+    }
+
+    @Override
     public Goods findGoodsById(String id) {
         //查询spu
         Spu spu = spuMapper.selectByPrimaryKey( id );
