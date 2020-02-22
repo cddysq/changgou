@@ -17,6 +17,7 @@
         <module>changgou_service_system</module>
         <module>changgou_service_business</module>
         <module>changgou_service_search</module>
+        <module>changgou_service_page</module>
     </modules>
 
 </project>
