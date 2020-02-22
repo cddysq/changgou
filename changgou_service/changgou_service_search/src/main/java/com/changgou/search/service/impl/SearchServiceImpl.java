@@ -100,7 +100,7 @@ public class SearchServiceImpl implements SearchService {
             }
             if (StrUtil.isEmpty( pageSize )) {
                 //每页显示条数为空，默认30条
-                pageSize = "30";
+                pageSize = "20";
             }
             nativeSearchQueryBuilder.withPageable( PageRequest.of( Integer.parseInt( pageNum ) - 1, Integer.parseInt( pageSize ) ) );
 

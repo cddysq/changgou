@@ -1,6 +1,8 @@
 package com.changgou.search.controller;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.changgou.common.pojo.Page;
+import com.changgou.search.pojo.SkuInfo;
 import com.changgou.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +40,17 @@ public class SearchController {
         model.addAttribute( "searchMap", searchMap );
         //封装查询数据返回
         model.addAttribute( "result", resultMap );
+
+        //封装分页数据并返回
+        //1.总记录数
+        //2.当前页
+        //3.每页显示多少条
+        Page<SkuInfo> page = new Page<>(
+                Long.parseLong( String.valueOf( resultMap.get( "total" ) ) ),
+                Integer.parseInt( String.valueOf( resultMap.get( "pageNum" ) ) ),
+                Page.pageSize
+        );
+        model.addAttribute( "page", page );
 
         //拼装url
         StringBuilder url = new StringBuilder( "/search/list" );
