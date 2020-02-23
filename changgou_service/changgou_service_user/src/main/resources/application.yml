@@ -3,8 +3,11 @@ server:
 spring:
   application:
     name: user
+  redis:
+    host: 192.168.200.128
+    port: 6379
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.NonRegisteringDriver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://192.168.200.128:3306/changgou_user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: root
