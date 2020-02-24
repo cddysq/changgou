@@ -3,6 +3,8 @@ package com.changgou.oauth.service.impl;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.changgou.oauth.constant.OauthStatusEnum;
+import com.changgou.oauth.exception.OauthException;
 import com.changgou.oauth.service.AuthService;
 import com.changgou.oauth.util.AuthToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,13 +74,13 @@ public class AuthServiceImpl implements AuthService {
         Map map = responseEntity.getBody();
         if (ObjectUtil.isEmpty( map )) {
             //申请令牌失败
-            throw new RuntimeException( "申请令牌失败" );
+            throw new OauthException( OauthStatusEnum.APPLY_FOR_TOKEN_ERROR );
         }
         String accessToken = Convert.toStr( map.get( "access_token" ) );
         String refreshToken = Convert.toStr( map.get( "refresh_token" ) );
         String jti = Convert.toStr( map.get( "jti" ) );
         if (StrUtil.isEmpty( accessToken ) || StrUtil.isEmpty( refreshToken ) || StrUtil.isEmpty( jti )) {
-            throw new RuntimeException( "申请令牌失败" );
+            throw new OauthException( OauthStatusEnum.APPLY_FOR_TOKEN_ERROR );
         }
 
         //2.封装结果数据

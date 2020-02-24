@@ -14,7 +14,8 @@ public class CookieUtil {
     /**
      * 设置cookie
      *
-     * @param response
+     * @param response 写入对象
+     * @param domain   域名
      * @param name     cookie名字
      * @param value    cookie值
      * @param maxAge   cookie生命周期 以秒为单位
