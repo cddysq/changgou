@@ -1,5 +1,5 @@
 server:
-  port: 9012
+  port: 9005
 spring:
   application:
     name: goods

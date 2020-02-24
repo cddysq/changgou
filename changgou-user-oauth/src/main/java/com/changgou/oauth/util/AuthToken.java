@@ -1,12 +1,13 @@
 package com.changgou.oauth.util;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class AuthToken implements Serializable {
 
     private static final long serialVersionUID = -8566978856822903174L;
