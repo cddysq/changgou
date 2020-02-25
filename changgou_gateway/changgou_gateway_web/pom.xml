@@ -11,5 +11,5 @@
 
     <artifactId>changgou_gateway_web</artifactId>
 
-    <description>前台网关服务</description>
+    <description>客户端网关服务</description>
 </project>
