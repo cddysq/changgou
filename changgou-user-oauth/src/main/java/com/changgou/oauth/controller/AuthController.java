@@ -36,6 +36,13 @@ public class AuthController {
     private int cookieMaxAge;
 
 
+    /**
+     * 用户登录
+     *
+     * @param username 用户名
+     * @param password 用户密码
+     * @return 登录提示
+     */
     @RequestMapping("/login")
     @ResponseBody
     public Result<Object> login(String username, String password, HttpServletResponse response) {
@@ -58,6 +65,22 @@ public class AuthController {
                 .data( authToken.getJti() ).build();
     }
 
+    /**
+     * 跳转登录
+     *
+     * @return 登录页面
+     */
+    @RequestMapping("/toLogin")
+    public String toLogin() {
+        return "login";
+    }
+
+    /**
+     * 保存cookie
+     *
+     * @param jti      jti
+     * @param response response 对象
+     */
     private void saveJtiToCookie(String jti, HttpServletResponse response) {
         CookieUtil.addCookie( response, cookieDomain, "/", "uid", jti, cookieMaxAge, false );
     }

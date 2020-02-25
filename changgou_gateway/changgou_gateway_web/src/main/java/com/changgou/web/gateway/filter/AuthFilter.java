@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthFilter implements GlobalFilter, Ordered {
     private static final String LOGIN_URI = "/api/oauth/login";
+    private static final String TO_LOGIN_URI = "/api/oauth/toLogin";
     @Autowired
     private AuthService authService;
 
@@ -31,7 +32,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
         //1.判断当前请求路径是否为登录请求,如果是,则直接放行
         String path = request.getURI().getPath();
-        if (LOGIN_URI.equals( path )) {
+        if (LOGIN_URI.equals( path ) || !UrlFilter.hasAuthorize( path )) {
             //是登录请求,进行放行
             return chain.filter( exchange );
         }
