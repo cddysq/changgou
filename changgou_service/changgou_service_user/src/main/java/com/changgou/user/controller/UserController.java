@@ -39,6 +39,17 @@ public class UserController {
     }
 
     /**
+     * 查询用户信息
+     *
+     * @param username 用户名
+     * @return 包含用户信息的实体类
+     */
+    @GetMapping("/load/{username}")
+    public User findUserInfo(@PathVariable("username") String username) {
+        return userService.findById( username );
+    }
+
+    /**
      * 根据用户名查询用户数据
      *
      * @param username 用户名
