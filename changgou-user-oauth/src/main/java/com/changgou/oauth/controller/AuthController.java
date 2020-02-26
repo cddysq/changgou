@@ -11,7 +11,9 @@ import com.changgou.oauth.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -71,7 +73,8 @@ public class AuthController {
      * @return 登录页面
      */
     @RequestMapping("/toLogin")
-    public String toLogin() {
+    public String toLogin(@RequestParam(value = "FROM", required = false, defaultValue = "") String from, Model model) {
+        model.addAttribute( "from", from );
         return "login";
     }
 

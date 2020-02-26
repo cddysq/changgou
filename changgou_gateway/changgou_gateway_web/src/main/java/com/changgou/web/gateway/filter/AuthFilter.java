@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthFilter implements GlobalFilter, Ordered {
     private static final String LOGIN_URI = "/api/oauth/login";
-    private static final String TO_LOGIN_URI = "/api/oauth/toLogin";
+    private static final String TO_LOGIN_URL = "http://localhost:9102/api/oauth/toLogin";
     @Autowired
     private AuthService authService;
 
@@ -41,21 +41,35 @@ public class AuthFilter implements GlobalFilter, Ordered {
         String jti = authService.getJtiFromCookie( request );
         if (StrUtil.isEmpty( jti )) {
             //为空 拒绝访问
-            response.setStatusCode( HttpStatus.UNAUTHORIZED );
-            return response.setComplete();
+            /*response.setStatusCode( HttpStatus.UNAUTHORIZED );
+            return response.setComplete();*/
+            //跳转登录页面
+            return this.toLoginPage( TO_LOGIN_URL + "?FROM=" + request.getURI().getPath(), exchange );
         }
 
         //3.从redis中获取jwt的值,如果该值不存在,拒绝本次访问
         String jwt = authService.getJwtFromRedis( jti );
         if (StrUtil.isEmpty( jwt )) {
-            //为空 拒绝访问
-            response.setStatusCode( HttpStatus.UNAUTHORIZED );
-            return response.setComplete();
+            return this.toLoginPage( TO_LOGIN_URL + "?FROM" + request.getURI().getPath(), exchange );
         }
 
         //4.对当前的请求对象进行增强,让它携带令牌的信息
         request.mutate().header( "Authorization", "Bearer " + jwt );
         return chain.filter( exchange );
+    }
+
+    /**
+     * 跳转登录页面
+     *
+     * @param loginUrl 登录url
+     * @param exchange 响应对象
+     * @return 登录页面
+     */
+    private Mono<Void> toLoginPage(String loginUrl, ServerWebExchange exchange) {
+        ServerHttpResponse response = exchange.getResponse();
+        response.setStatusCode( HttpStatus.MOVED_TEMPORARILY );
+        response.getHeaders().set( "Location", loginUrl );
+        return response.setComplete();
     }
 
     @Override
