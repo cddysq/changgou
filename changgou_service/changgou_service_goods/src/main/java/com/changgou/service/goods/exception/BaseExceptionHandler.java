@@ -3,7 +3,6 @@ package com.changgou.service.goods.exception;
 import com.changgou.common.exception.ExceptionMessage;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
-import com.changgou.service.goods.exception.GoodsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;

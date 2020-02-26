@@ -2,7 +2,6 @@ package com.changgou.search.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.changgou.goods.feign.SkuFeign;
 import com.changgou.goods.pojo.Sku;
