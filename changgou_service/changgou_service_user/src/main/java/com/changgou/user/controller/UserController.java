@@ -7,6 +7,7 @@ import com.changgou.user.pojo.User;
 import com.changgou.user.service.UserService;
 import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class UserController {
      * @return 所有用户信息
      */
     @GetMapping
+    @PreAuthorize( "hasAnyAuthority('user')" )
     public Result<List<User>> findAll() {
         return Result.<List<User>>builder()
                 .flag( true )
