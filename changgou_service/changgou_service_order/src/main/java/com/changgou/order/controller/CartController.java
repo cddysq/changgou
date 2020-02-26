@@ -2,6 +2,7 @@ package com.changgou.order.controller;
 
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
+import com.changgou.order.config.TokenDecode;
 import com.changgou.order.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class CartController {
     @Autowired
     private CartService cartService;
+    @Autowired
+    private TokenDecode tokenDecode;
 
     /**
      * 添加购物车
@@ -32,8 +35,8 @@ public class CartController {
     @GetMapping("/addCart")
     public Result<Object> addCart(@RequestParam("skuId") String skuId, @RequestParam("number") Integer number) {
 
-        //动态获取当前人信息,暂时静态
-        String username = "heima";
+        //动态获取当前人信息
+        String username = tokenDecode.getUserInfo().get( "username" );
         cartService.addCart( skuId, number, username );
         return Result.builder()
                 .flag( true )
@@ -48,8 +51,7 @@ public class CartController {
      */
     @GetMapping("/list")
     public Map<String, Object> list() {
-        //动态获取当前人信息,暂时静态
-        String username = "heima";
+        String username = tokenDecode.getUserInfo().get( "username" );
         return cartService.list( username );
     }
 }
