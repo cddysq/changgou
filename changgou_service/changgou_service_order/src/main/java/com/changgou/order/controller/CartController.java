@@ -47,7 +47,7 @@ public class CartController {
      * @return 购物车信息
      */
     @GetMapping("/list")
-    public Map<String, Object> addCart() {
+    public Map<String, Object> list() {
         //动态获取当前人信息,暂时静态
         String username = "heima";
         return cartService.list( username );

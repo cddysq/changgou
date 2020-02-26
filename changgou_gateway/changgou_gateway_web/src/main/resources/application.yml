@@ -34,6 +34,20 @@ spring:
             - Path=/api/oauth/**
           filters:
             - StripPrefix=1
+        #订单微服务
+        - id: changgou_order_route
+          uri: lb://order
+          predicates:
+            - Path=/api/cart/**,/api/categoryReport/**,/api/orderConfig/**,/api/order/**,/api/orderItem/**,/api/orderLog/**,/api/preferential/**,/api/returnCause/**,/api/returnOrder/**,/api/returnOrderItem/**
+          filters:
+            - StripPrefix=1
+        #购物车订单渲染微服务
+        - id: changgou_order_web_route
+          uri: lb://order-web
+          predicates:
+            - Path=/api/wcart/**,/api/worder/**
+          filters:
+            - StripPrefix=1
   redis:
     host: 192.168.200.128
 server:
