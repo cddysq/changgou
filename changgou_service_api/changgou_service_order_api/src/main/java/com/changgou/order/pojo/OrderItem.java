@@ -12,7 +12,7 @@ import java.io.Serializable;
 /**
  * @Author: Haotian
  * @Date: 2020/2/26 18:35
- * @Description: 订单实体类
+ * @Description: 购物车商品实体类
  **/
 @Data
 @NoArgsConstructor
