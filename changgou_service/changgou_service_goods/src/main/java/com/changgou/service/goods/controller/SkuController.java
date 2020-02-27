@@ -144,11 +144,26 @@ public class SkuController {
      */
     @GetMapping("/spu/{spuId}")
     public List<Sku> findSkuListBySpuId(@PathVariable("spuId") String spuId) {
-        Map<String, Object> searchMap = new HashMap<>(0);
+        Map<String, Object> searchMap = new HashMap<>( 0 );
         if (!"all".equals( spuId )) {
             searchMap.put( "spuId", spuId );
         }
         searchMap.put( "status", "1" );
         return skuService.findList( searchMap );
+    }
+
+    /**
+     * 扣减库存，增加销量
+     *
+     * @param username 当前下单用户名
+     * @return 操作提示
+     */
+    @PostMapping("/decr/count")
+    public Result<Object> decrCount(@RequestParam("username") String username) {
+        skuService.decrCount( username );
+        return Result.builder()
+                .flag( true )
+                .code( StatusCode.OK )
+                .message( "库存扣减成功，销量已增加" ).build();
     }
 }

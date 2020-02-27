@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.changgou.goods.feign.SkuFeign;
 import com.changgou.order.dao.OrderItemMapper;
 import com.changgou.order.dao.OrderMapper;
 import com.changgou.order.pojo.Order;
@@ -36,6 +37,8 @@ public class OrderServiceImpl implements OrderService {
     private CartService cartService;
     @Autowired
     private OrderItemMapper orderItemMapper;
+    @Autowired
+    private SkuFeign skuFeign;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -81,8 +84,10 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setOrderId( orderId );
             orderItemMapper.insertSelective( orderItem );
         }
+        //5.扣减库存
+        skuFeign.decrCount( order.getUsername() );
 
-        //5.从redis中删除购物车数据
+        //6.从redis中删除购物车数据
         redisTemplate.delete( "cart_" + order.getUsername() );
     }
 

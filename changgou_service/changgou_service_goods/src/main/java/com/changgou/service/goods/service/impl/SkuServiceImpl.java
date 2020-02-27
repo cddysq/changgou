@@ -3,12 +3,16 @@ package com.changgou.service.goods.service.impl;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.changgou.goods.pojo.Sku;
+import com.changgou.order.pojo.OrderItem;
+import com.changgou.service.goods.constant.GoodsStatusEnum;
 import com.changgou.service.goods.dao.SkuMapper;
+import com.changgou.service.goods.exception.GoodsException;
 import com.changgou.service.goods.service.SkuService;
 import com.changgou.service.goods.util.Condition;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -26,6 +30,8 @@ import java.util.Map;
 public class SkuServiceImpl implements SkuService {
     @Autowired
     private SkuMapper skuMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public List<Sku> findAll() {
@@ -65,6 +71,19 @@ public class SkuServiceImpl implements SkuService {
         return PageHelper
                 .startPage( pageNum, pageSize )
                 .doSelectPage( () -> skuMapper.selectByExample( getExample( searchMap ) ) );
+    }
+
+    @Override
+    public void decrCount(String username) {
+        //1.获取购物车的数据
+        List<OrderItem> orderItemList = redisTemplate.boundHashOps( "cart_" + username ).values();
+        //2.循环扣减库存增加销量
+        for (OrderItem orderItem : orderItemList) {
+            int count = skuMapper.decrCount( orderItem );
+            if (count <= 0) {
+                throw new GoodsException( GoodsStatusEnum.ORDER_ERROR );
+            }
+        }
     }
 
     /**

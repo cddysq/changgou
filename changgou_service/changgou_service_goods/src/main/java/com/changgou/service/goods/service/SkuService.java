@@ -65,4 +65,11 @@ public interface SkuService {
      * @return 分页结果
      */
     Page<Sku> findPage(Map<String, Object> searchMap, Integer pageNum, Integer pageSize);
+
+    /**
+     * 扣减库存，增加销量
+     *
+     * @param username 用户名
+     */
+    void decrCount(String username);
 }

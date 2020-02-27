@@ -15,6 +15,7 @@ public enum GoodsStatusEnum implements ExceptionMessage {
     GOODS_NOT_AUDITED( false, StatusCode.ERROR, "当前商品未审核" ),
     GOODS_NOT_DELETE( false, StatusCode.ERROR, "当前商品处于未删除状态" ),
     GOODS_NOT_OFFLINE( false, StatusCode.ERROR, "当前商品必须处于下架状态才能删除" ),
+    ORDER_ERROR( false, StatusCode.ERROR, "系统异常，请稍后重试" ),
     THE_GOODS_ARE_BEING_DELETED( false, StatusCode.ERROR, "当前商品处于删除状态" );
     private boolean flag;
     private Integer code;

@@ -5,6 +5,8 @@ import com.changgou.goods.pojo.Sku;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -33,4 +35,13 @@ public interface SkuFeign {
      */
     @GetMapping("sku/{id}")
     Result<Sku> findById(@PathVariable("id") String id);
+
+    /**
+     * 扣减库存，增加销量
+     *
+     * @param username 当前下单用户名
+     * @return 操作提示
+     */
+    @PostMapping("/sku/decr/count")
+    Result<Object> decrCount(@RequestParam("username") String username);
 }
