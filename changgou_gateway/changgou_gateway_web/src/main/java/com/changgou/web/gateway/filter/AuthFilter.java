@@ -50,7 +50,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         //3.从redis中获取jwt的值,如果该值不存在,拒绝本次访问
         String jwt = authService.getJwtFromRedis( jti );
         if (StrUtil.isEmpty( jwt )) {
-            return this.toLoginPage( TO_LOGIN_URL + "?FROM" + request.getURI().getPath(), exchange );
+            return this.toLoginPage( TO_LOGIN_URL + "?FROM=" + request.getURI().getPath(), exchange );
         }
 
         //4.对当前的请求对象进行增强,让它携带令牌的信息

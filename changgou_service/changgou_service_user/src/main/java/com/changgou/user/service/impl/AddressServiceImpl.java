@@ -66,6 +66,12 @@ public class AddressServiceImpl implements AddressService {
                 .doSelectPage( () -> addressMapper.selectByExample( getExample( searchMap ) ) );
     }
 
+    @Override
+    public List<Address> list(String username) {
+        Address address = Address.builder().username( username ).build();
+        return addressMapper.select( address );
+    }
+
     /**
      * 条件拼接
      *

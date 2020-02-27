@@ -66,4 +66,12 @@ public interface AddressService {
      * @return 分页结果
      */
     Page<Address> findPage(Map<String, Object> searchMap, Integer pageNum, Integer pageSize);
+
+    /**
+     * 根据当前的登录用户名获取与之相关的收件人地址
+     *
+     * @param username 当前登录用户名
+     * @return 登录人所属收件地址
+     */
+    List<Address> list(String username);
 }
