@@ -72,7 +72,7 @@
 </div>
 
 
-<div class="cart py-container">
+<div class="cart py-container" id="app">
     <!--主内容-->
     <div class="checkout py-container">
         <div class="checkout-tit">
@@ -88,7 +88,9 @@
                     <ul class="addr-detail">
                         <li class="addr-item">
                             <div class="choose-address" th:each="address:${addressList}">
-                                <div class="con name" th:classappend="${address.isDefault}==1?'selected':''"><a
+                                <div class="con name"
+                                     th:@click="|chooseAddress('${address.contact}','${address.phone}','${address.address}')|"
+                                     th:classappend="${address.isDefault}==1?'selected':''"><a
                                         href="javascript:;"><em
                                         th:text="${address.contact}"></em><span title="点击取消选择"></span></a>
                                 </div>
@@ -112,8 +114,8 @@
                 </div>
                 <div class="step-cont">
                     <ul class="payType">
-                        <li class="selected">在线支付<span title="点击取消选择"></span></li>
-                        <li>货到付款<span title="点击取消选择"></span></li>
+                        <li class="selected" th:@click="|order.payType=1|">在线支付<span title="点击取消选择"></span></li>
+                        <li th:@click="|order.payType=0|">货到付款<span title="点击取消选择"></span></li>
                     </ul>
                 </div>
                 <div class="hr"></div>
@@ -204,9 +206,9 @@
         <div class="fc-price">应付金额:　<span class="price">¥<em th:text="${totalMoney}"></em></span></div>
         <div class="fc-receiverInfo">
             寄送至:
-            <span id="receive-address">北京市海淀区三环内中关村软件园9号楼</span>
-            收货人：<span id="receive-name">冯提莫</span>
-            <span id="receive-phone">15922333201</span>
+            <span id="receive-address">{{order.receiveAddress}}</span>
+            收货人：<span id="receive-name">{{order.receiveContact}}</span>
+            <span id="receive-phone">{{order.receiveMobile}}</span>
         </div>
     </div>
     <div class="submit">
@@ -351,8 +353,6 @@
 <script type="text/javascript" src="/js/axios.js"></script>
 
 <script>
-
-
     $(function () {
         $(".address").hover(function () {
             $(this).addClass("address-hover");
@@ -373,10 +373,27 @@
             $(this).toggleClass("selected").siblings().removeClass("selected");
         });
     })
-
-
 </script>
-
+<script th:inline="javascript">
+    var app = new Vue({
+        el: "#app",
+        data: {
+            order: {
+                'receiveContact': [[${defaultAddress.contact}]],
+                'receiveMobile': [[${defaultAddress.phone}]],
+                'receiveAddress': [[${defaultAddress.address}]],
+                'payType': 1
+            }
+        },
+        methods: {
+            chooseAddress: function (contact, mobile, address) {
+                app.$set(app.order, 'receiveContact', contact);
+                app.$set(app.order, 'receiveMobile', mobile);
+                app.$set(app.order, 'receiveAddress', address);
+            },
+        }
+    })
+</script>
 </body>
 
 </html>

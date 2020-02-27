@@ -35,6 +35,7 @@ public class OrderController {
         //收件人的信息
         List<Address> addressList = addressFeign.list().getData();
         model.addAttribute( "addressList", addressList );
+
         //购物车的信息
         Map<String, Object> map = cartFeign.list();
         //购物车商品数据
@@ -46,6 +47,15 @@ public class OrderController {
         //商品总价钱
         Integer totalMoney = (Integer) map.get( "totalMoney" );
         model.addAttribute( "totalMoney", totalMoney );
+
+        //发送默认收件人信息
+        for (Address address : addressList) {
+            if ("1".equals( address.getIsDefault() )) {
+                //是默认
+                model.addAttribute( "defaultAddress", address );
+                break;
+            }
+        }
         return "order";
     }
 }
