@@ -109,7 +109,7 @@ public class Order implements Serializable {
     private String buyerMessage;
 
     /**
-     * 是否评价
+     * 是否评价 0:未评价 1:已评价
      */
     private String buyerRate;
 
@@ -139,17 +139,17 @@ public class Order implements Serializable {
     private String transactionId;
 
     /**
-     * 订单状态
+     * 订单状态  0:未完成  1:已完成  2:已退货
      */
     private String orderStatus;
 
     /**
-     * 支付状态
+     * 支付状态 0:未支付 1:已支付
      */
     private String payStatus;
 
     /**
-     * 发货状态
+     * 发货状态 0:未发货 1:已发货
      */
     private String consignStatus;
 

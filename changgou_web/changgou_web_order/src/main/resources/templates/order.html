@@ -212,7 +212,7 @@
         </div>
     </div>
     <div class="submit">
-        <a class="sui-btn btn-danger btn-xlarge" href="pay.html">提交订单</a>
+        <a class="sui-btn btn-danger btn-xlarge" href="javascript:void(0)" @click="add()">提交订单</a>
     </div>
 </div>
 <!-- 底部栏位 -->
@@ -391,6 +391,17 @@
                 app.$set(app.order, 'receiveMobile', mobile);
                 app.$set(app.order, 'receiveAddress', address);
             },
+            add: function () {
+                axios.post('/api/worder/add', this.order).then(function (response) {
+                    if (response.data.flag) {
+                        //添加成功
+                        alert("success");
+                    } else {
+                        //添加失败
+                        alert("error");
+                    }
+                })
+            }
         }
     })
 </script>

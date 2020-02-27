@@ -1,13 +1,19 @@
 package com.changgou.web.order.controller;
 
+import com.changgou.common.pojo.Result;
 import com.changgou.order.feign.CartFeign;
+import com.changgou.order.feign.OrderFeign;
+import com.changgou.order.pojo.Order;
 import com.changgou.order.pojo.OrderItem;
 import com.changgou.user.feign.AddressFeign;
 import com.changgou.user.pojo.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +30,8 @@ public class OrderController {
     private AddressFeign addressFeign;
     @Autowired
     private CartFeign cartFeign;
+    @Autowired
+    private OrderFeign orderFeign;
 
     /**
      * 跳转订单页面
@@ -58,4 +66,17 @@ public class OrderController {
         }
         return "order";
     }
+
+    /**
+     * 新增订单
+     *
+     * @param order 订单数据
+     * @return 新增提示信息
+     */
+    @PostMapping("/add")
+    @ResponseBody
+    public Result<Object> addOrder(@RequestBody Order order) {
+        return orderFeign.addOrder( order );
+    }
+
 }

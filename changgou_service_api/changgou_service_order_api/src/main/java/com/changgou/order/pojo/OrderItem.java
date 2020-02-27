@@ -12,7 +12,7 @@ import java.io.Serializable;
 /**
  * @Author: Haotian
  * @Date: 2020/2/26 18:35
- * @Description: 购物车商品实体类
+ * @Description: 订单项实体类(一个订单包含多个订单项)
  **/
 @Data
 @NoArgsConstructor
@@ -98,7 +98,7 @@ public class OrderItem implements Serializable {
     private Integer postFee;
 
     /**
-     * 是否退货
+     * 是否退货 0: 未退货 1：已退货
      */
     private String isReturn;
 }
