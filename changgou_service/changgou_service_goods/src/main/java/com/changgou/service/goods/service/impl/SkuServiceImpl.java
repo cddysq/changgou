@@ -74,6 +74,7 @@ public class SkuServiceImpl implements SkuService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void decrCount(String username) {
         //1.获取购物车的数据
         List<OrderItem> orderItemList = redisTemplate.boundHashOps( "cart_" + username ).values();

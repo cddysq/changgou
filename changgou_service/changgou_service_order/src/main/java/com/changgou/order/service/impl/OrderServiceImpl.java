@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fescar.spring.annotation.GlobalTransactional;
 import com.changgou.goods.feign.SkuFeign;
 import com.changgou.order.dao.OrderItemMapper;
 import com.changgou.order.dao.OrderMapper;
@@ -55,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @GlobalTransactional(name = "order_add")
     public void addOrder(Order order) {
         //1.获取购物车的相关数据  → redis 中取
         Map<String, Object> cartMap = cartService.list( order.getUsername() );
@@ -86,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
         }
         //5.扣减库存
         skuFeign.decrCount( order.getUsername() );
-
+        //int i = 1 / 0;
         //6.从redis中删除购物车数据
         redisTemplate.delete( "cart_" + order.getUsername() );
     }

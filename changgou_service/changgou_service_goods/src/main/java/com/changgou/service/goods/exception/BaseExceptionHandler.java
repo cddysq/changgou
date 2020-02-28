@@ -3,6 +3,7 @@ package com.changgou.service.goods.exception;
 import com.changgou.common.exception.ExceptionMessage;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @Description: 公共异常处理
  */
 @ControllerAdvice
+@Slf4j
 public class BaseExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
@@ -26,6 +28,7 @@ public class BaseExceptionHandler {
                     .code( message.getCode() )
                     .message( message.getMessage() ).build();
         }
+        log.error( e.getMessage() );
         return Result.builder()
                 .flag( false )
                 .code( StatusCode.ERROR )

@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * @Author: Haotian
  * @Date: 2020/2/26 18:17
- * @Description: log实体类
+ * @Description: Seata at log实体类
  **/
 @Data
 @NoArgsConstructor
