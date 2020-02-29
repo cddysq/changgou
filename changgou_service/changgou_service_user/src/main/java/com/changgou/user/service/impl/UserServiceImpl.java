@@ -1,13 +1,20 @@
 package com.changgou.user.service.impl;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.changgou.order.pojo.Task;
+import com.changgou.user.dao.PointLogMapper;
 import com.changgou.user.dao.UserMapper;
+import com.changgou.user.pojo.PointLog;
 import com.changgou.user.pojo.User;
 import com.changgou.user.service.UserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -15,6 +22,7 @@ import tk.mybatis.mapper.entity.Example;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: Haotian
@@ -22,9 +30,14 @@ import java.util.Map;
  * @Description: 用户服务实现
  **/
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private PointLogMapper pointLogMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public List<User> findAll() {
@@ -64,6 +77,41 @@ public class UserServiceImpl implements UserService {
         return PageHelper
                 .startPage( pageNum, pageSize )
                 .doSelectPage( () -> userMapper.selectByExample( getExample( searchMap ) ) );
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateUserPoint(Task task) {
+        log.info( "用户服务开始对任务消息进行处理" );
+        //1.从 task 中获取相关数据
+        Map map = JSON.parseObject( task.getRequestBody(), Map.class );
+        String username = Convert.toStr( map.get( "username" ) );
+        String orderId = Convert.toStr( map.get( "orderId" ) );
+        Integer point = Convert.toInt( map.get( "point" ) );
+        //2.判断当前的任务是否操作过
+        PointLog pointLog = pointLogMapper.findPointLogByOrderId( orderId );
+        if (ObjectUtil.isNotEmpty( pointLog )) {
+            return 0;
+        }
+        //3.将任务存入redis中
+        redisTemplate.boundValueOps( task.getId() ).set( "exist", 30, TimeUnit.SECONDS );
+        //4.修改用户积分
+        int result = userMapper.updateUserPoint( username, point );
+        if (result <= 0) {
+            //修改失败
+            return 0;
+        }
+        //5.记录用户积分日志
+        pointLog = PointLog.builder().userId( username ).orderId( orderId ).point( point ).build();
+        result = pointLogMapper.insertSelective( pointLog );
+        if (result <= 0) {
+            //修改失败
+            return 0;
+        }
+        //6.删除redis中的任务信息
+        redisTemplate.delete( task.getId() );
+        log.info( "用户服务完成更改用户积分操作" );
+        return 1;
     }
 
     /**

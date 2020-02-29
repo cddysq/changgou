@@ -2,18 +2,24 @@ package com.changgou.order.service.impl;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fescar.spring.annotation.GlobalTransactional;
 import com.changgou.goods.feign.SkuFeign;
+import com.changgou.order.config.RabbitMqConfig;
 import com.changgou.order.dao.OrderItemMapper;
 import com.changgou.order.dao.OrderMapper;
+import com.changgou.order.dao.TaskMapper;
 import com.changgou.order.pojo.Order;
 import com.changgou.order.pojo.OrderItem;
+import com.changgou.order.pojo.Task;
 import com.changgou.order.service.CartService;
 import com.changgou.order.service.OrderService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -31,6 +37,7 @@ import java.util.Map;
  * @Description: 分类服务实现
  **/
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
@@ -38,6 +45,8 @@ public class OrderServiceImpl implements OrderService {
     private CartService cartService;
     @Autowired
     private OrderItemMapper orderItemMapper;
+    @Autowired
+    private TaskMapper taskMapper;
     @Autowired
     private SkuFeign skuFeign;
     @Autowired
@@ -88,7 +97,22 @@ public class OrderServiceImpl implements OrderService {
         //5.扣减库存
         skuFeign.decrCount( order.getUsername() );
         //int i = 1 / 0;
-        //6.从redis中删除购物车数据
+
+        //6.添加任务数据
+        log.info( "开始向订单数据库的任务表添加任务数据" );
+        //构件mq消息体内容
+        Map<String, Object> map = MapUtil.<String, Object>builder()
+                .put( "username", order.getUsername() )
+                .put( "orderId", orderId )
+                .put( "point", order.getPayMoney() ).build();
+        Task task = Task.builder().
+                createTime( new Date() ).updateTime( new Date() )
+                .mqExchange( RabbitMqConfig.EX_BUYING_ADD_POINT_USER )
+                .mqRoutingkey( RabbitMqConfig.CG_BUYING_ADD_POINT_KEY )
+                .requestBody( JSON.toJSONString( map ) ).build();
+        taskMapper.insertSelective( task );
+
+        //7.从redis中删除购物车数据
         redisTemplate.delete( "cart_" + order.getUsername() );
     }
 

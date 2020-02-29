@@ -1,6 +1,7 @@
 package com.changgou.user.service;
 
 
+import com.changgou.order.pojo.Task;
 import com.changgou.user.pojo.User;
 import com.github.pagehelper.Page;
 
@@ -66,4 +67,12 @@ public interface UserService {
      * @return 分页结果
      */
     Page<User> findPage(Map<String, Object> searchMap, Integer pageNum, Integer pageSize);
+
+    /**
+     * 更新用户积分
+     *
+     * @param task 任务类
+     * @return 是否更新成功
+     */
+    int updateUserPoint(Task task);
 }
