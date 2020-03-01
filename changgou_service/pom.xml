@@ -20,6 +20,7 @@
         <module>changgou_service_page</module>
         <module>changgou_service_user</module>
         <module>changgou_service_order</module>
+        <module>changgou_service_pay</module>
     </modules>
 
 </project>
