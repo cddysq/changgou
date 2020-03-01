@@ -7,6 +7,9 @@ spring:
     host: 192.168.200.128
   main:
     allow-bean-definition-overriding: true #当遇到同样名字的时候，是否允许覆盖注册
+  output:
+    ansi:
+      enabled: always
 eureka:
   client:
     service-url:
