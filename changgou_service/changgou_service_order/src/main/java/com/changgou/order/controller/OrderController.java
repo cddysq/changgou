@@ -67,10 +67,11 @@ public class OrderController {
         //获取当前登录用户名
         String username = tokenDecode.getUserInfo().get( "username" );
         order.setUsername( username );
-        orderService.addOrder( order );
+        String orderId = orderService.addOrder( order );
         return Result.builder()
                 .flag( true )
                 .code( StatusCode.OK )
+                .data( orderId )
                 .message( "添加成功" ).build();
     }
 

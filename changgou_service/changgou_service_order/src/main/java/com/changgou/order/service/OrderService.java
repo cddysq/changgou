@@ -32,8 +32,9 @@ public interface OrderService {
      * 新增订单
      *
      * @param order 订单数据
+     * @return 订单号
      */
-    void addOrder(Order order);
+    String addOrder(Order order);
 
     /**
      * 修改订单信息

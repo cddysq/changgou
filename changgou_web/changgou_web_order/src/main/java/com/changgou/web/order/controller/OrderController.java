@@ -10,10 +10,7 @@ import com.changgou.user.pojo.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -79,4 +76,18 @@ public class OrderController {
         return orderFeign.addOrder( order );
     }
 
+    /**
+     * 跳转支付页面
+     *
+     * @param orderId 订单id
+     * @param model   封装数据模型
+     * @return 支付页面
+     */
+    @GetMapping("/toPayPage")
+    public String toPayPage(String orderId, Model model) {
+        Order order = orderFeign.findById( orderId ).getData();
+        model.addAttribute( "orderId", orderId );
+        model.addAttribute( "payMoney", order.getPayMoney() );
+        return "pay";
+    }
 }
