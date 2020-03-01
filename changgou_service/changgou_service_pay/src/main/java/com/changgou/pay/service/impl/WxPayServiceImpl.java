@@ -4,6 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import com.changgou.pay.service.WxPayService;
 import com.github.wxpay.sdk.WXPay;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,6 +19,8 @@ import java.util.Map;
 public class WxPayServiceImpl implements WxPayService {
     @Autowired
     private WXPay wxPay;
+    @Value("${wxpay.notify_url}")
+    private String notifyUrl;
 
     @Override
     public Map<String, String> nativePay(String orderId, Integer money) {
@@ -36,7 +39,7 @@ public class WxPayServiceImpl implements WxPayService {
                 //终端IP
                 .put( "spbill_create_ip", "127.0.0.1" )
                 //通知地址
-                .put( "notify_url", "https://www.yileaf.com" )
+                .put( "notify_url", notifyUrl )
                 .put( "trade_type", "NATIVE" )
                 .build();
         //2.基于wxPay完成统一接口的调用，并获取返回值

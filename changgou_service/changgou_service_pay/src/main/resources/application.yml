@@ -17,4 +17,4 @@ eureka:
   instance:
     prefer-ip-address: true
 wxpay:
-  notify_url: http://weizhaohui.cross.echosite.cn/wxpay/notify #回调地址
+  notify_url: http://haotian.cross.echosite.cn/wxpay/notify #回调地址
