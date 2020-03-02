@@ -1,22 +1,23 @@
 package com.changgou.pay.controller;
 
-import cn.hutool.core.convert.Convert;
+import cn.hutool.core.map.MapUtil;
+import com.alibaba.fastjson.JSON;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
 import com.changgou.common.util.ConvertUtils;
+import com.changgou.pay.config.RabbitMqConfig;
 import com.changgou.pay.service.WxPayService;
+import com.github.wxpay.sdk.WXPayUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -28,8 +29,18 @@ import java.util.Map;
 @RequestMapping("/wxpay")
 @Slf4j
 public class WxPayController {
+    /**
+     * 请求成功返回字符
+     */
+    private static final String SUCCESS = "SUCCESS";
+    /**
+     * 微信返回状态码字段名
+     */
+    private static final String RETURN_CODE = "return_code";
     @Autowired
     private WxPayService wxPayService;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * 本地支付
@@ -60,9 +71,31 @@ public class WxPayController {
         try {
             //输入流转字符串
             xml = ConvertUtils.convertToString( request.getInputStream() );
+            //转换通知内容
+            Map<String, String> map = WXPayUtil.xmlToMap( xml );
+            if (SUCCESS.equals( map.get( RETURN_CODE ) )) {
+                //基于微信发送通知内容，获取订单号查询订单
+                Map<String, String> result = wxPayService.queryOrder( map.get( "out_trade_no" ) );
+                log.info( "查询订单结果：{}", result );
+                if (SUCCESS.equals( result.get( RETURN_CODE ) )) {
+                    //将订单消息发送到mq
+                    Map<String, String> dataMap = MapUtil.<String, String>builder()
+                            //封装订单号
+                            .put( "orderId", result.get( "out_trade_no" ) )
+                            //微信支付订单号
+                            .put( "transactionId", result.get( "transaction_id" ) ).build();
+                    rabbitTemplate.convertAndSend( "", RabbitMqConfig.ORDER_PAY, JSON.toJSONString( dataMap ) );
+                } else {
+                    //打印错误信息
+                    log.info( "从微信查询订单出错啦：{}", result.get( "err_code_des" ) );
+                }
+            } else {
+                //打印错误信息
+                log.info( "从微信查询订单出错啦：{}", map.get( "err_code_des" ) );
+            }
             //给微信一个结果通知
             response.getWriter().write( data );
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         log.info( "微信返回通知内容{}", xml );

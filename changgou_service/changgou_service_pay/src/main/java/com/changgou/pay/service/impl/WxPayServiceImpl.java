@@ -50,4 +50,18 @@ public class WxPayServiceImpl implements WxPayService {
             return null;
         }
     }
+
+    @Override
+    public Map<String, String> queryOrder(String orderId) {
+        Map<String, String> map = MapUtil.<String, String>builder()
+                //商户订单号
+                .put( "out_trade_no", orderId )
+                .build();
+        try {
+            return wxPay.orderQuery( map );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
