@@ -85,6 +85,8 @@ public class WxPayController {
                             //微信支付订单号
                             .put( "transactionId", result.get( "transaction_id" ) ).build();
                     rabbitTemplate.convertAndSend( "", RabbitMqConfig.ORDER_PAY, JSON.toJSONString( dataMap ) );
+                    //完成双向通信
+                    rabbitTemplate.convertAndSend( "paynotify", "", result.get( "out_trade_no" ) );
                 } else {
                     //打印错误信息
                     log.info( "从微信查询订单出错啦：{}", result.get( "err_code_des" ) );

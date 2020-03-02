@@ -51,12 +51,23 @@ public class PayController {
         if (ObjectUtil.isEmpty( payResult.getData() )) {
             return "fail";
         }
-
         //4.封装结果数据
         Map<String, Object> payMap = Convert.toMap( String.class, Object.class, payResult.getData() );
         payMap.put( "orderId", orderId );
         payMap.put( "payMoney", order.getPayMoney() );
         model.addAllAttributes( payMap );
         return "wxpay";
+    }
+
+    /**
+     * 跳转支付成功页面
+     *
+     * @param payMoney 支付金额
+     * @return 付款成功页面
+     */
+    @RequestMapping("/toPaySuccess")
+    public String toPaySuccess(Integer payMoney, Model model) {
+        model.addAttribute( "payMoney", payMoney );
+        return "paysuccess";
     }
 }

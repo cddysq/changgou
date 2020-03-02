@@ -67,4 +67,12 @@ public interface OrderService {
      * @return 分页结果
      */
     Page<Order> findPage(Map<String, Object> searchMap, Integer pageNum, Integer pageSize);
+
+    /**
+     * 修改订单支付状态，并记录日志
+     *
+     * @param orderId       订单id
+     * @param transactionId 微信支付订单号
+     */
+    void updatePayStatus(String orderId, String transactionId);
 }

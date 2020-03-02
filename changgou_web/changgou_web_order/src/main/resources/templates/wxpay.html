@@ -222,23 +222,20 @@
     });
     qrcode.makeCode([[${code_url}]]);
 
-
-    let client = Stomp.client('ws://127.0.0.1:15674/ws');
+    let client = Stomp.client('ws://192.168.200.128:15674/ws');
     let on_connect = function (x) {
         id = client.subscribe("/exchange/paynotify", function (d) {
-            let orderId = "11001021010312";//订单号
+            let orderId = [[${orderId}]];//订单号
             if (d.body == orderId) {
-                location.href = '/paysuccess.html?payMoney=1'; //参数支付金额
+                //跳转支付成功页面
+                location.href = "/api/wxpay/toPaySuccess?payMoney=" + [[${payMoney}]]; //参数支付金额
             }
         });
     };
     let on_error = function () {
         console.log('error');
     };
-    client.connect('webguest', 'itcast', on_connect, on_error, '/');
-
-
+    client.connect('sakura', 'sakura', on_connect, on_error, '/');
 </script>
-
 
 </html>

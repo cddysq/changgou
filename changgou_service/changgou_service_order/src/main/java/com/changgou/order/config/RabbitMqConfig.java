@@ -38,6 +38,11 @@ public class RabbitMqConfig {
     public static final String CG_BUYING_FINISH_ADD_POINT_KEY = "finish_add_point";
 
     /**
+     * 订单支付成功消息队列
+     */
+    public static final String ORDER_PAY = "order_pay";
+
+    /**
      * 声明交换机
      */
     @Bean(EX_BUYING_ADD_POINT_USER)
@@ -56,6 +61,11 @@ public class RabbitMqConfig {
     @Bean(CG_BUYING_FINISH_ADD_POINT)
     public Queue cg_buying_finish_add_point() {
         return new Queue( CG_BUYING_FINISH_ADD_POINT );
+    }
+
+    @Bean
+    public Queue queue() {
+        return new Queue( ORDER_PAY );
     }
 
     /**

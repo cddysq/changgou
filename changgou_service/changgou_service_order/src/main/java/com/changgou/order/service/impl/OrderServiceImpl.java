@@ -4,16 +4,19 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fescar.spring.annotation.GlobalTransactional;
 import com.changgou.goods.feign.SkuFeign;
 import com.changgou.order.config.RabbitMqConfig;
 import com.changgou.order.dao.OrderItemMapper;
+import com.changgou.order.dao.OrderLogMapper;
 import com.changgou.order.dao.OrderMapper;
 import com.changgou.order.dao.TaskMapper;
 import com.changgou.order.pojo.Order;
 import com.changgou.order.pojo.OrderItem;
+import com.changgou.order.pojo.OrderLog;
 import com.changgou.order.pojo.Task;
 import com.changgou.order.service.CartService;
 import com.changgou.order.service.OrderService;
@@ -47,6 +50,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderItemMapper orderItemMapper;
     @Autowired
     private TaskMapper taskMapper;
+    @Autowired
+    private OrderLogMapper orderLogMapper;
     @Autowired
     private SkuFeign skuFeign;
     @Autowired
@@ -139,6 +144,32 @@ public class OrderServiceImpl implements OrderService {
         return PageHelper
                 .startPage( pageNum, pageSize )
                 .doSelectPage( () -> orderMapper.selectByExample( getExample( searchMap ) ) );
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePayStatus(String orderId, String transactionId) {
+        //1.查询订单
+        Order order = orderMapper.selectByPrimaryKey( orderId );
+        if (ObjectUtil.isNotEmpty( order ) && "0".equals( order.getPayStatus() )) {
+            //2.修改订单的支付状态
+            order.setPayStatus( "1" );
+            order.setOrderStatus( "1" );
+            order.setUpdateTime( new Date() );
+            order.setPayTime( new Date() );
+            order.setTransactionId( transactionId );
+            orderMapper.updateByPrimaryKey( order );
+            //3.记录订单日志
+            OrderLog orderLog = OrderLog.builder()
+                    .id( snowflake.nextIdStr() )
+                    .operater( "system" )
+                    .operateTime( new Date() )
+                    .orderStatus( "1" )
+                    .payStatus( "1" )
+                    .orderId( orderId )
+                    .remarks( "交易流水号:" + transactionId ).build();
+            orderLogMapper.insert( orderLog );
+        }
     }
 
     /**
