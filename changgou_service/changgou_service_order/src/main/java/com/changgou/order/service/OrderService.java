@@ -90,4 +90,12 @@ public interface OrderService {
      * @return 提示信息
      */
     Map<String, Object> batchSend(List<Order> orderList);
+
+    /**
+     * 确认收货
+     *
+     * @param orderId  订单号
+     * @param operator 操做模式
+     */
+    void confirmTask(String orderId, String operator);
 }

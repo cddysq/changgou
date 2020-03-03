@@ -11,7 +11,8 @@ import lombok.AllArgsConstructor;
  **/
 @AllArgsConstructor
 public enum OrderStatusEnum implements ExceptionMessage {
-    NOT_FOUND_ORDER( false, StatusCode.ERROR, "订单不存在" );
+    NOT_FOUND_ORDER( false, StatusCode.ERROR, "订单不存在" ),
+    ORDER_IS_DELIVERY( false, StatusCode.ERROR, "订单不存在" );
     private boolean flag;
     private Integer code;
     private String message;

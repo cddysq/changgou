@@ -43,7 +43,7 @@ public class OrderLog implements Serializable {
     private String orderId;
 
     /**
-     * 订单状态  0:未完成  1:已完成  2:已发货 4:已关闭
+     * 订单状态  0:未完成  1:已完成  2:已发货 3:已完成 4:已关闭
      */
     private String orderStatus;
 
@@ -53,7 +53,7 @@ public class OrderLog implements Serializable {
     private String payStatus;
 
     /**
-     * 发货状态 0:未发货 1:已发货
+     * 发货状态 0:未发货 1:已发货 2:已送达
      */
     private String consignStatus;
 

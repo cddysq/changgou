@@ -183,20 +183,51 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void confirmTask(String orderId, String operator) {
+        Order order = orderMapper.selectByPrimaryKey( orderId );
+        if (ObjectUtil.isEmpty( order )) {
+            throw new OrderException( OrderStatusEnum.NOT_FOUND_ORDER );
+        }
+        if (!"1".equals( order.getConsignStatus() )) {
+            throw new OrderException( OrderStatusEnum.ORDER_IS_DELIVERY );
+        }
+        order.setConsignStatus( "2" );
+        order.setOrderStatus( "3" );
+        order.setUpdateTime( new Date() );
+        order.setEndTime( new Date() );
+        orderMapper.updateByPrimaryKey( order );
+        //记录订单日志
+        OrderLog orderLog = OrderLog.builder()
+                .id( snowflake.nextIdStr() )
+                .operater( operator )
+                .operateTime( new Date() )
+                .orderStatus( "3" )
+                .consignStatus( "2" )
+                .orderId( orderId ).build();
+        orderLogMapper.insertSelective( orderLog );
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> batchSend(List<Order> orderList) {
         Map<String, Object> result = new HashMap<>();
         for (Order order : orderList) {
             List<String> list = new ArrayList<>();
             String orderId = order.getId();
+            boolean flag = true;
             //1.判断参数是否为空
             if (StrUtil.isEmpty( order.getShippingCode() ) || StrUtil.isEmpty( order.getShippingName() )) {
                 list.add( String.format( "订单号%s,请输入对应的运单号或物流公司名称", orderId ) );
+                flag = false;
             }
             //2.校验订单状态
             Order or = orderMapper.selectByPrimaryKey( orderId );
             if (!"0".equals( or.getConsignStatus() ) || !"1".equals( or.getOrderStatus() )) {
                 list.add( String.format( "订单号%s,订单状态不合法", or.getId() ) );
+                flag = false;
+            }
+            if (!flag) {
+                continue;
             }
             //3.修改订单状态为已发货
             or.setOrderStatus( "2" );
