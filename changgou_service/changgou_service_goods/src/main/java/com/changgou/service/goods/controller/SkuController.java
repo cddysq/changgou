@@ -166,4 +166,20 @@ public class SkuController {
                 .code( StatusCode.OK )
                 .message( "库存扣减成功，销量已增加" ).build();
     }
+
+    /**
+     * 回滚库存，扣减销量
+     *
+     * @param skuId  商品id
+     * @param number 商品数量
+     * @return 操作提示
+     */
+    @PostMapping("/resumeStockNumber")
+    public Result<Object> resumeStockNumber(@RequestParam("skuId") String skuId, @RequestParam("num") Integer number) {
+        skuService.resumeStockNumber( skuId, number );
+        return Result.builder()
+                .flag( true )
+                .code( StatusCode.OK )
+                .message( "回滚库存成功，销量已减少" ).build();
+    }
 }

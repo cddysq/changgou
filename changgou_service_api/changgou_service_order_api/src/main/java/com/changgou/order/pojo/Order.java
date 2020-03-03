@@ -139,7 +139,7 @@ public class Order implements Serializable {
     private String transactionId;
 
     /**
-     * 订单状态  0:未完成  1:已完成  2:已退货
+     * 订单状态  0:未完成  1:已完成  2:已退货 4:已关闭
      */
     private String orderStatus;
 

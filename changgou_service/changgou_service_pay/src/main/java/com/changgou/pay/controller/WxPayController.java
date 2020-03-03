@@ -11,10 +11,7 @@ import com.github.wxpay.sdk.WXPayUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -101,5 +98,37 @@ public class WxPayController {
             e.printStackTrace();
         }
         log.info( "微信返回通知内容{}", xml );
+    }
+
+    /**
+     * 基于微信查询订单
+     *
+     * @param orderId 订单号
+     * @return 订单信息
+     */
+    @GetMapping("/query/{orderId}")
+    public Result<Object> queryOrder(@PathVariable("orderId") String orderId) {
+        Map<String, String> map = wxPayService.queryOrder( orderId );
+        return Result.builder()
+                .flag( true )
+                .code( StatusCode.OK )
+                .message( "查询订单成功" )
+                .data( map ).build();
+    }
+
+    /**
+     * 基于微信关闭订单
+     *
+     * @param orderId 订单号
+     * @return 订单信息
+     */
+    @PutMapping("/close/{orderId}")
+    public Result<Object> closeOrder(@PathVariable("orderId") String orderId) {
+        Map<String, String> map = wxPayService.queryOrder( orderId );
+        return Result.builder()
+                .flag( true )
+                .code( StatusCode.OK )
+                .message( "关闭订单成功" )
+                .data( map ).build();
     }
 }

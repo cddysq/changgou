@@ -10,19 +10,23 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fescar.spring.annotation.GlobalTransactional;
 import com.changgou.goods.feign.SkuFeign;
 import com.changgou.order.config.RabbitMqConfig;
+import com.changgou.order.constant.OrderStatusEnum;
 import com.changgou.order.dao.OrderItemMapper;
 import com.changgou.order.dao.OrderLogMapper;
 import com.changgou.order.dao.OrderMapper;
 import com.changgou.order.dao.TaskMapper;
+import com.changgou.order.exception.OrderException;
 import com.changgou.order.pojo.Order;
 import com.changgou.order.pojo.OrderItem;
 import com.changgou.order.pojo.OrderLog;
 import com.changgou.order.pojo.Task;
 import com.changgou.order.service.CartService;
 import com.changgou.order.service.OrderService;
+import com.changgou.pay.feign.PayFeign;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,10 @@ import java.util.Map;
 @Service
 @Slf4j
 public class OrderServiceImpl implements OrderService {
+    /**
+     * 微信交易状态返回字段
+     */
+    private static final String TRADE_STATE = "trade_state";
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
@@ -55,7 +63,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private SkuFeign skuFeign;
     @Autowired
+    private PayFeign payFeign;
+    @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     private Snowflake snowflake = IdUtil.createSnowflake( 1, 1 );
 
@@ -102,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
         //5.扣减库存
         skuFeign.decrCount( order.getUsername() );
         //int i = 1 / 0;
-
+        //Fixme: 2020/3/3 17:58 如果下单就进行积分添加，关闭订单时积分必须回滚，或者将添加积分任务放在支付成功后进行
         //6.添加任务数据
         log.info( "开始向订单数据库的任务表添加任务数据" );
         //构件mq消息体内容
@@ -119,7 +131,57 @@ public class OrderServiceImpl implements OrderService {
 
         //7.从redis中删除购物车数据
         redisTemplate.delete( "cart_" + order.getUsername() );
+        //8.发送延迟消息
+        rabbitTemplate.convertAndSend( "", RabbitMqConfig.QUEUE_ORDER_CREATE, orderId );
         return orderId;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void closeOrder(String orderId) {
+        //1.更据订单id查询订单相关信息
+        log.info( "开始执行关闭订单业务，当前订单id:{}", orderId );
+        Order order = orderMapper.selectByPrimaryKey( orderId );
+        if (ObjectUtil.isEmpty( order )) {
+            throw new OrderException( OrderStatusEnum.NOT_FOUND_ORDER );
+        }
+        if (!"0".equals( order.getPayStatus() )) {
+            log.info( "当前订单无需关闭" );
+            return;
+        }
+        //2.基于微信查询订单信息
+        log.info( "开始根据订单号：{}从微信查询相关信息", orderId );
+        Map<String, String> wxQueryMap = Convert.toMap( String.class, String.class, payFeign.queryOrder( orderId ).getData() );
+        String payStatus = wxQueryMap.get( TRADE_STATE );
+        //3.如果订单为已支付，补偿消息
+        if ("SUCCESS".equals( payStatus )) {
+            this.updatePayStatus( orderId, wxQueryMap.get( "transaction_id" ) );
+            log.info( "消息补偿成功" );
+
+        }
+        //4.如未支付，关闭订单
+        if ("NOTPAY".equals( payStatus )) {
+            order.setUpdateTime( new Date() );
+            order.setOrderStatus( "4" );
+            orderMapper.updateByPrimaryKey( order );
+            //记录日志
+            OrderLog orderLog = OrderLog.builder()
+                    .id( snowflake.nextIdStr() )
+                    .operater( "system" )
+                    .operateTime( new Date() )
+                    .orderStatus( "4" )
+                    .orderId( order.getId() ).build();
+            orderLogMapper.insertSelective( orderLog );
+            //回滚库存
+            OrderItem orderItem = OrderItem.builder().orderId( order.getId() ).build();
+            List<OrderItem> orderItemList = orderItemMapper.select( orderItem );
+            for (OrderItem item : orderItemList) {
+                skuFeign.resumeStockNumber( item.getSkuId(), item.getNum() );
+            }
+            //关闭微信订单
+            payFeign.closeOrder( orderId );
+            log.info( "关闭订单" );
+        }
     }
 
     @Override

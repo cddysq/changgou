@@ -44,4 +44,14 @@ public interface SkuFeign {
      */
     @PostMapping("/sku/decr/count")
     Result<Object> decrCount(@RequestParam("username") String username);
+
+    /**
+     * 回滚库存，扣减销量
+     *
+     * @param skuId  商品id
+     * @param number 商品数量
+     * @return 操作提示
+     */
+    @PostMapping("/sku/resumeStockNumber")
+    Result<Object> resumeStockNumber(@RequestParam("skuId") String skuId, @RequestParam("num") Integer number);
 }

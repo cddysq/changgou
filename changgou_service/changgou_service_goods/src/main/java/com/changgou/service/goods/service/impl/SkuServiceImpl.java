@@ -87,6 +87,12 @@ public class SkuServiceImpl implements SkuService {
         }
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void resumeStockNumber(String skuId, Integer number) {
+        skuMapper.resumeStockNumber( skuId, number );
+    }
+
     /**
      * 条件拼接
      *

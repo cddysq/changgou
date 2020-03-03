@@ -43,6 +43,16 @@ public class RabbitMqConfig {
     public static final String ORDER_PAY = "order_pay";
 
     /**
+     * 订单延迟消息通知队列
+     */
+    public static final String QUEUE_ORDER_CREATE = "queue.ordercreate";
+
+    /**
+     * 订单超时消息队列
+     */
+    public static final String QUEUE_ORDER_TIMEOUT = "queue.ordertimeout";
+
+    /**
      * 声明交换机
      */
     @Bean(EX_BUYING_ADD_POINT_USER)

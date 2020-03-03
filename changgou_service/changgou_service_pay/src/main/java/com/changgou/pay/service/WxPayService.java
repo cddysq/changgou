@@ -24,4 +24,12 @@ public interface WxPayService {
      * @return 提示信息
      */
     Map<String, String> queryOrder(String orderId);
+
+    /**
+     * 基于微信接口关闭订单
+     *
+     * @param orderId 订单号
+     * @return 提示信息
+     */
+    Map<String, String> closeOrder(String orderId);
 }

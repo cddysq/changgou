@@ -75,4 +75,11 @@ public interface OrderService {
      * @param transactionId 微信支付订单号
      */
     void updatePayStatus(String orderId, String transactionId);
+
+    /**
+     * 关闭订单
+     *
+     * @param orderId 订单号
+     */
+    void closeOrder(String orderId);
 }
