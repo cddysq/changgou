@@ -19,6 +19,7 @@
         <module>changgou_common_fescar</module>
         <module>changgou_canal</module>
         <module>changgou-user-oauth</module>
+        <module>changgou_task</module>
     </modules>
 
     <parent>

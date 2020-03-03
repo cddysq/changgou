@@ -95,7 +95,12 @@ public interface OrderService {
      * 确认收货
      *
      * @param orderId  订单号
-     * @param operator 操做模式
+     * @param operator 操做人
      */
     void confirmTask(String orderId, String operator);
+
+    /**
+     * 自动收货
+     */
+    void autoTack();
 }

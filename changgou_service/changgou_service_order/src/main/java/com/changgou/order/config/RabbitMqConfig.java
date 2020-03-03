@@ -53,6 +53,11 @@ public class RabbitMqConfig {
     public static final String QUEUE_ORDER_TIMEOUT = "queue.ordertimeout";
 
     /**
+     * 自动收货消息队列
+     */
+    public static final String ORDER_TACK = "order_tack";
+
+    /**
      * 声明交换机
      */
     @Bean(EX_BUYING_ADD_POINT_USER)
@@ -76,6 +81,11 @@ public class RabbitMqConfig {
     @Bean
     public Queue queue() {
         return new Queue( ORDER_PAY );
+    }
+
+    @Bean
+    public Queue order_tack() {
+        return new Queue( ORDER_TACK );
     }
 
     /**

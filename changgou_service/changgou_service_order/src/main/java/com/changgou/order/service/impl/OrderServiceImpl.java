@@ -11,15 +11,9 @@ import com.alibaba.fescar.spring.annotation.GlobalTransactional;
 import com.changgou.goods.feign.SkuFeign;
 import com.changgou.order.config.RabbitMqConfig;
 import com.changgou.order.constant.OrderStatusEnum;
-import com.changgou.order.dao.OrderItemMapper;
-import com.changgou.order.dao.OrderLogMapper;
-import com.changgou.order.dao.OrderMapper;
-import com.changgou.order.dao.TaskMapper;
+import com.changgou.order.dao.*;
 import com.changgou.order.exception.OrderException;
-import com.changgou.order.pojo.Order;
-import com.changgou.order.pojo.OrderItem;
-import com.changgou.order.pojo.OrderLog;
-import com.changgou.order.pojo.Task;
+import com.changgou.order.pojo.*;
 import com.changgou.order.service.CartService;
 import com.changgou.order.service.OrderService;
 import com.changgou.pay.feign.PayFeign;
@@ -34,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -58,6 +53,8 @@ public class OrderServiceImpl implements OrderService {
     private TaskMapper taskMapper;
     @Autowired
     private OrderLogMapper orderLogMapper;
+    @Autowired
+    private OrderConfigMapper orderConfigMapper;
     @Autowired
     private SkuFeign skuFeign;
     @Autowired
@@ -205,6 +202,26 @@ public class OrderServiceImpl implements OrderService {
                 .consignStatus( "2" )
                 .orderId( orderId ).build();
         orderLogMapper.insertSelective( orderLog );
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void autoTack() {
+        //1.从订单配置表中获取订单自动确认时间点
+        OrderConfig orderConfig = orderConfigMapper.selectByPrimaryKey( 1 );
+        //2.得到当前时间节点,向前数 ( 订单自动确认的时间节点 ) 天,作为过期的时间节点
+        LocalDate now = LocalDate.now();
+        LocalDate date = now.plusDays( -orderConfig.getTakeTimeout() );
+        //3.从订单表中获取相关符合条件的数据 (发货时间小于过期时间,收货状态为未确认 )
+        Example example = new Example( Order.class );
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andLessThan( "consignTime", date );
+        criteria.andEqualTo( "orderStatus", "2" );
+        List<Order> orderList = orderMapper.selectByExample( example );
+        //4.执行确认收货
+        for (Order order : orderList) {
+            this.confirmTask( order.getId(), "system" );
+        }
     }
 
     @Override
