@@ -141,4 +141,20 @@ public class OrderController {
                         .total( pageList.getTotal() )
                         .rows( pageList.getResult() ).build() ).build();
     }
+
+    /**
+     * 批量发货
+     *
+     * @param orderList 订单集合
+     * @return 提示信息
+     */
+    @PostMapping("/batchSend")
+    public Result<Object> batchSend(@RequestBody List<Order> orderList) {
+        Map<String, Object> message = orderService.batchSend( orderList );
+        return Result.builder()
+                .flag( true )
+                .code( StatusCode.OK )
+                .message( "批量发货成功" )
+                .data( message ).build();
+    }
 }

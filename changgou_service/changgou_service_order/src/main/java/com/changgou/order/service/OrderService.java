@@ -82,4 +82,12 @@ public interface OrderService {
      * @param orderId 订单号
      */
     void closeOrder(String orderId);
+
+    /**
+     * 批量发货
+     *
+     * @param orderList 订单集合
+     * @return 提示信息
+     */
+    Map<String, Object> batchSend(List<Order> orderList);
 }

@@ -34,9 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: Haotian
@@ -182,6 +180,44 @@ public class OrderServiceImpl implements OrderService {
             payFeign.closeOrder( orderId );
             log.info( "关闭订单" );
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> batchSend(List<Order> orderList) {
+        Map<String, Object> result = new HashMap<>();
+        for (Order order : orderList) {
+            List<String> list = new ArrayList<>();
+            String orderId = order.getId();
+            //1.判断参数是否为空
+            if (StrUtil.isEmpty( order.getShippingCode() ) || StrUtil.isEmpty( order.getShippingName() )) {
+                list.add( String.format( "订单号%s,请输入对应的运单号或物流公司名称", orderId ) );
+            }
+            //2.校验订单状态
+            Order or = orderMapper.selectByPrimaryKey( orderId );
+            if (!"0".equals( or.getConsignStatus() ) || !"1".equals( or.getOrderStatus() )) {
+                list.add( String.format( "订单号%s,订单状态不合法", or.getId() ) );
+            }
+            //3.修改订单状态为已发货
+            or.setOrderStatus( "2" );
+            or.setConsignStatus( "1" );
+            or.setConsignTime( new Date() );
+            or.setUpdateTime( new Date() );
+            orderMapper.selectByPrimaryKey( or );
+            //4.记录订单日志
+            OrderLog orderLog = OrderLog.builder()
+                    .id( snowflake.nextIdStr() )
+                    .operater( "admin" )
+                    .operateTime( new Date() )
+                    .orderStatus( "2" )
+                    .consignStatus( "1" )
+                    .orderId( orderId ).build();
+            orderLogMapper.insertSelective( orderLog );
+            result.put( "flag", list.size() == 0 );
+            result.put( "message", list.size() == 0 ? "批处理成功" : "批处理失败" );
+            result.put( "data", list );
+        }
+        return result;
     }
 
     @Override
