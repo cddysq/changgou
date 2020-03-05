@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>changgou_web_order</module>
+        <module>changgou_web_seckill</module>
     </modules>
 
 

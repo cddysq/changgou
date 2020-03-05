@@ -55,6 +55,13 @@ spring:
             - Path=/api/seckill/**
           filters:
             - StripPrefix=1
+        #秒杀渲染服务
+        - id: changgou_seckill_web_route
+          uri: lb://seckill-web
+          predicates:
+            - Path=/api/wseckillgoods/**
+          filters:
+            - StripPrefix=1
   redis:
     host: 192.168.200.128
 server:

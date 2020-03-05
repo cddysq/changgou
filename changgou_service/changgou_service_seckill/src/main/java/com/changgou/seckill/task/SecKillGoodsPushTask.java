@@ -1,7 +1,6 @@
 package com.changgou.seckill.task;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
 import com.changgou.common.util.DateUtil;
 import com.changgou.seckill.dao.SeckillGoodsMapper;
 import com.changgou.seckill.pojo.SeckillGoods;
@@ -63,8 +62,6 @@ public class SecKillGoodsPushTask {
         //状态必须为审核通过 status=1
         criteria.andEqualTo( "status", "1" );
         //商品库存个数>0
-        criteria.andGreaterThan( "stockCount", 0 );
-        //秒杀商品开始时间>=当前时间段
         String startTime = cn.hutool.core.date.DateUtil.formatDateTime( dateMenu );
         criteria.andGreaterThanOrEqualTo( "startTime", startTime );
         //秒杀商品结束<当前时间段+2小时
