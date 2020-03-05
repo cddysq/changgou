@@ -48,6 +48,13 @@ spring:
             - Path=/api/wcart/**,/api/worder/**,/api/wxpay/**
           filters:
             - StripPrefix=1
+        #秒杀服务
+        - id: changgou_seckill_route
+          uri: lb://seckill
+          predicates:
+            - Path=/api/seckill/**
+          filters:
+            - StripPrefix=1
   redis:
     host: 192.168.200.128
 server:
