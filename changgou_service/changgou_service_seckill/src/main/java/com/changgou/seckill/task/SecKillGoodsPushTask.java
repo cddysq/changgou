@@ -1,7 +1,8 @@
 package com.changgou.seckill.task;
 
 import cn.hutool.core.collection.CollUtil;
-import com.changgou.common.util.DateUtil;
+import cn.hutool.core.date.DateUtil;
+import com.changgou.common.util.DateUtils;
 import com.changgou.seckill.dao.SeckillGoodsMapper;
 import com.changgou.seckill.pojo.SeckillGoods;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,10 @@ public class SecKillGoodsPushTask {
     public void loadSecKillGoodsToRedis() {
         //查询所有符合条件的秒杀商品
         //1.获取时间段集合并循环遍历出每一个时间段
-        List<Date> dateMenus = DateUtil.getDateMenus();
+        List<Date> dateMenus = DateUtils.getDateMenus();
         for (Date dateMenu : dateMenus) {
             //2.获取每一个时间段名称,用于后续redis中key的设置
-            String redisExtName = DateUtil.date2Str( dateMenu );
+            String redisExtName = DateUtils.date2Str( dateMenu );
             //3.拼装查询条件
             Example example = getExample( dateMenu, redisExtName );
             //4.执行查询获取对应的结果集
@@ -62,10 +63,10 @@ public class SecKillGoodsPushTask {
         //状态必须为审核通过 status=1
         criteria.andEqualTo( "status", "1" );
         //商品库存个数>0
-        String startTime = cn.hutool.core.date.DateUtil.formatDateTime( dateMenu );
+        String startTime = DateUtil.formatDateTime( dateMenu );
         criteria.andGreaterThanOrEqualTo( "startTime", startTime );
         //秒杀商品结束<当前时间段+2小时
-        String endTime = cn.hutool.core.date.DateUtil.formatDateTime( cn.hutool.core.date.DateUtil.offsetHour( dateMenu, 2 ) );
+        String endTime = DateUtil.formatDateTime( DateUtil.offsetHour( dateMenu, 2 ) );
         criteria.andLessThan( "endTime", endTime );
         //排除之前已经加载到Redis缓存中的商品数据 key field=对象id value=对象
         Set field = redisTemplate.boundHashOps( SEC_KILL_GOODS_KEY + redisExtName ).keys();

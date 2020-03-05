@@ -69,7 +69,7 @@
 									</span>
                             </li>
                             <li class="f-item">
-                                <span>网站导航</li>
+                                <span>网站导航</span></li>
                         </ul>
                     </div>
 
@@ -154,6 +154,7 @@
                         </div>
                     </div>
                     <a class='sui-btn btn-block btn-buy' href='javascript:void(0)' @click="add(item.id)">立即抢购</a>
+                </div>
             </li>
         </ul>
     </div>
@@ -330,8 +331,8 @@
 <!-- 引入组件库 -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.8/dist/vue.js"></script>
 <script src="https://cdn.bootcss.com/element-ui/2.5.4/index.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script src="/js/axios.js"></script>
-<script src="/js/moment.min.js"></script>
 <script th:inline="javascript">
 
     //过滤器
@@ -360,7 +361,7 @@
                     //计算正确的倒计时时间差
                     for (var i = 0; i < app.dateMenus.length; i++) {
                         if (i == 0) {
-                            var x = i + 1;
+                            const x = i + 1;
                             app.$set(app.alltimes, i, new Date(app.dateMenus[x]).getTime() - new Date().getTime());
                         } else {
                             app.$set(app.alltimes, i, new Date(app.dateMenus[i]).getTime() - new Date().getTime());
@@ -383,25 +384,33 @@
             },
             //将毫秒转换成时分秒
             timedown: function (num) {
-                var oneSecond = 1000;
-                var oneMinute = oneSecond * 60;
-                var oneHour = oneMinute * 60
+                const oneSecond = 1000;
+                const oneMinute = oneSecond * 60;
+                const oneHour = oneMinute * 60;
                 //小时
-                var hours = Math.floor(num / oneHour);
+                let hours = Math.floor(num / oneHour);
+                if (hours < 10) {
+                    hours = "0" + hours;
+                }
                 //分钟
-                var minutes = Math.floor((num % oneHour) / oneMinute);
+                let minutes = Math.floor((num % oneHour) / oneMinute);
+                if (minutes < 10) {
+                    minutes = "0" + minutes;
+                }
                 //秒
-                var seconds = Math.floor((num % oneMinute) / oneSecond);
+                let seconds = Math.floor((num % oneMinute) / oneSecond);
+                if (seconds < 10) {
+                    seconds = "0" + seconds;
+                }
                 //拼接时间格式
-                var str = hours + ':' + minutes + ':' + seconds;
-                return str;
+                return hours + ':' + minutes + ':' + seconds;
             },
             searchList: function (time) {
                 axios.get("/api/wseckillgoods/list?time=" + time).then(function (response) {
                     app.goodslist = response.data.data;
                 })
-            },
-            add: function (id) {
+            }
+            /*add: function (id) {
                 axios.get("/api/wseckillorder/add?time=" + moment(app.dateMenus[0].format("YYYYMMDDHH") + "&id=" + id)).then(function (response) {
                     if (response.data.flag) {
                         app.msg = "抢单成功,即将进入支付";
@@ -409,14 +418,13 @@
                         app.msg = "抢单失败";
                     }
                 })
-            }
+            }*/
         },
         created: function () {
             this.loadMenus();
         }
     })
 </script>
-
 
 </body>
 

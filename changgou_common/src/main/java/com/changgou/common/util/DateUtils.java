@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class DateUtil {
+public class DateUtils {
 
     /**
      * 从yyyy-MM-dd HH:mm格式转成yyyyMMddHH格式
