@@ -41,7 +41,6 @@ public class ConfirmMessageSender implements RabbitTemplate.ConfirmCallback {
         String correlationDataId = correlationData.getId();
         if (ack) {
             //发送成功，删除redis中的数据备份
-            redisTemplate.delete( Objects.requireNonNull( correlationDataId ) );
             redisTemplate.delete( MESSAGE_CONFIRM_KEY + correlationDataId );
         } else {
             //发送失败，再次发送消息
@@ -64,7 +63,6 @@ public class ConfirmMessageSender implements RabbitTemplate.ConfirmCallback {
         //设置消息的唯一标识并存入redis中
         CorrelationData correlationData = new CorrelationData( IdUtil.randomUUID() );
         String correlationDataId = correlationData.getId();
-        redisTemplate.opsForValue().set( Objects.requireNonNull( correlationDataId ), message );
         //将本次发送消息的相关元数据保存到redis中
         Map<Object, Object> map = MapUtil.builder()
                 .put( "exchange", exchange )

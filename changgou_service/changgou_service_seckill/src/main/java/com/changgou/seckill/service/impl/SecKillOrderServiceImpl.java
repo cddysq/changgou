@@ -56,7 +56,7 @@ public class SecKillOrderServiceImpl implements SecKillOrderService {
             redisTemplate.boundHashOps( SEC_KILL_GOODS_KEY + time ).delete( id );
             redisTemplate.delete( SEC_KILL_GOODS_STOCK_COUNT_KEY + id );
         }
-        //4.基于mq进行数据同步，进行异步下单扣减mysql中的库存数
+        //4.发送消息，基于mq进行数据同步
         SeckillOrder seckillOrder = SeckillOrder.builder()
                 .id( snowflake.nextId() )
                 .seckillId( id )
