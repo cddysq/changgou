@@ -4,6 +4,9 @@ import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.changgou.seckill.config.ConfirmMessageSender;
+import com.changgou.seckill.config.RabbitMqConfig;
 import com.changgou.seckill.pojo.SeckillGoods;
 import com.changgou.seckill.pojo.SeckillOrder;
 import com.changgou.seckill.service.SecKillOrderService;
@@ -32,6 +35,8 @@ public class SecKillOrderServiceImpl implements SecKillOrderService {
     private Snowflake snowflake = IdUtil.createSnowflake( 1, 1 );
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private ConfirmMessageSender confirmMessageSender;
 
     @Override
     public boolean add(Long id, String time, String username) {
@@ -44,7 +49,6 @@ public class SecKillOrderServiceImpl implements SecKillOrderService {
         if (StrUtil.isEmpty( stockCount )) {
             return false;
         }
-        int stock = Integer.parseInt( stockCount );
         //2.执行redis中的预扣减库存 decrement:键对应的value减一 increment:键对应的value加一
         Long decrement = redisTemplate.opsForValue().decrement( SEC_KILL_GOODS_STOCK_COUNT_KEY + id );
         if (decrement <= 0) {
@@ -60,6 +64,7 @@ public class SecKillOrderServiceImpl implements SecKillOrderService {
                 .sellerId( seckillGoods.getSellerId() )
                 .createTime( new Date() )
                 .status( "0" ).build();
-        return false;
+        confirmMessageSender.sendMessage( "", RabbitMqConfig.SEC_KILL_ORDER_QUEUE, JSON.toJSONString( seckillOrder ) );
+        return true;
     }
 }

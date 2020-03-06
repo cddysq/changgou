@@ -52,7 +52,7 @@ spring:
         - id: changgou_seckill_route
           uri: lb://seckill
           predicates:
-            - Path=/api/seckill/**
+            - Path=/api/secKillGoods/**,/api/seckillorder/**
           filters:
             - StripPrefix=1
         #秒杀渲染服务
