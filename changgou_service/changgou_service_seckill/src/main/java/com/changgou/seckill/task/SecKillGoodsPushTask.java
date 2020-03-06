@@ -26,6 +26,10 @@ public class SecKillGoodsPushTask {
      * redis 中秒杀商品 key 前缀
      */
     private static final String SEC_KILL_GOODS_KEY = "sec_kill_goods_key";
+    /**
+     * redis 中秒杀商品库存 key 前缀
+     */
+    private static final String SEC_KILL_GOODS_STOCK_COUNT_KEY = "sec_kill_goods_stock_count_key";
     @Autowired
     private SeckillGoodsMapper seckillGoodsMapper;
     @Autowired
@@ -46,6 +50,8 @@ public class SecKillGoodsPushTask {
             //5.将秒杀商品存入缓存
             for (SeckillGoods goods : secKillGoodsList) {
                 redisTemplate.opsForHash().put( SEC_KILL_GOODS_KEY + redisExtName, goods.getId(), goods );
+                //加载秒杀商品的库存,使用到了redis原子性
+                redisTemplate.opsForValue().set( SEC_KILL_GOODS_STOCK_COUNT_KEY + goods.getId(), goods.getStockCount() );
             }
         }
     }

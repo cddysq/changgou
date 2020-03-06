@@ -1,5 +1,6 @@
 package com.changgou.seckill;
 
+import com.changgou.seckill.config.TokenDecode;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
@@ -43,6 +44,11 @@ public class SecKillApplication {
         template.setKeySerializer( new StringRedisSerializer() );
         template.afterPropertiesSet();
         return template;
+    }
+
+    @Bean
+    public TokenDecode tokenDecode() {
+        return new TokenDecode();
     }
 
 }

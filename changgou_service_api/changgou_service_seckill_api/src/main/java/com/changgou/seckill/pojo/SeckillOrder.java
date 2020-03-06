@@ -1,5 +1,10 @@
 package com.changgou.seckill.pojo;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -12,8 +17,13 @@ import java.util.Date;
  * @Date: 2020/3/5 16:44
  * @Description: 秒杀订单实体类
  **/
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "tb_seckill_order")
 public class SeckillOrder implements Serializable {
+    private static final long serialVersionUID = 1L;
     /**
      * 主键
      */
@@ -86,222 +96,4 @@ public class SeckillOrder implements Serializable {
      */
     @Column(name = "transaction_id")
     private String transactionId;
-
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * 获取主键
-     *
-     * @return id - 主键
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * 设置主键
-     *
-     * @param id 主键
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * 获取秒杀商品ID
-     *
-     * @return seckill_id - 秒杀商品ID
-     */
-    public Long getSeckillId() {
-        return seckillId;
-    }
-
-    /**
-     * 设置秒杀商品ID
-     *
-     * @param seckillId 秒杀商品ID
-     */
-    public void setSeckillId(Long seckillId) {
-        this.seckillId = seckillId;
-    }
-
-    /**
-     * 获取支付金额
-     *
-     * @return money - 支付金额
-     */
-    public BigDecimal getMoney() {
-        return money;
-    }
-
-    /**
-     * 设置支付金额
-     *
-     * @param money 支付金额
-     */
-    public void setMoney(BigDecimal money) {
-        this.money = money;
-    }
-
-    /**
-     * 获取用户
-     *
-     * @return user_id - 用户
-     */
-    public String getUserId() {
-        return userId;
-    }
-
-    /**
-     * 设置用户
-     *
-     * @param userId 用户
-     */
-    public void setUserId(String userId) {
-        this.userId = userId == null ? null : userId.trim();
-    }
-
-    /**
-     * 获取商家
-     *
-     * @return seller_id - 商家
-     */
-    public String getSellerId() {
-        return sellerId;
-    }
-
-    /**
-     * 设置商家
-     *
-     * @param sellerId 商家
-     */
-    public void setSellerId(String sellerId) {
-        this.sellerId = sellerId == null ? null : sellerId.trim();
-    }
-
-    /**
-     * 获取创建时间
-     *
-     * @return create_time - 创建时间
-     */
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    /**
-     * 设置创建时间
-     *
-     * @param createTime 创建时间
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    /**
-     * 获取支付时间
-     *
-     * @return pay_time - 支付时间
-     */
-    public Date getPayTime() {
-        return payTime;
-    }
-
-    /**
-     * 设置支付时间
-     *
-     * @param payTime 支付时间
-     */
-    public void setPayTime(Date payTime) {
-        this.payTime = payTime;
-    }
-
-    /**
-     * 获取状态
-     *
-     * @return status - 状态
-     */
-    public String getStatus() {
-        return status;
-    }
-
-    /**
-     * 设置状态
-     *
-     * @param status 状态
-     */
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
-
-    /**
-     * 获取收货人地址
-     *
-     * @return receiver_address - 收货人地址
-     */
-    public String getReceiverAddress() {
-        return receiverAddress;
-    }
-
-    /**
-     * 设置收货人地址
-     *
-     * @param receiverAddress 收货人地址
-     */
-    public void setReceiverAddress(String receiverAddress) {
-        this.receiverAddress = receiverAddress == null ? null : receiverAddress.trim();
-    }
-
-    /**
-     * 获取收货人电话
-     *
-     * @return receiver_mobile - 收货人电话
-     */
-    public String getReceiverMobile() {
-        return receiverMobile;
-    }
-
-    /**
-     * 设置收货人电话
-     *
-     * @param receiverMobile 收货人电话
-     */
-    public void setReceiverMobile(String receiverMobile) {
-        this.receiverMobile = receiverMobile == null ? null : receiverMobile.trim();
-    }
-
-    /**
-     * 获取收货人
-     *
-     * @return receiver - 收货人
-     */
-    public String getReceiver() {
-        return receiver;
-    }
-
-    /**
-     * 设置收货人
-     *
-     * @param receiver 收货人
-     */
-    public void setReceiver(String receiver) {
-        this.receiver = receiver == null ? null : receiver.trim();
-    }
-
-    /**
-     * 获取交易流水
-     *
-     * @return transaction_id - 交易流水
-     */
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    /**
-     * 设置交易流水
-     *
-     * @param transactionId 交易流水
-     */
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId == null ? null : transactionId.trim();
-    }
 }

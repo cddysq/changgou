@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @Author: Haotian
  * @Date: 2020/3/5 20:51
- * @Description: 秒杀服务
+ * @Description: 秒杀商品服务
  */
 public interface SecKillGoodsService {
     /**
