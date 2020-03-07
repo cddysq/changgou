@@ -1,4 +1,4 @@
-package com.changgou.demo;
+package com.changgou.common.util;
 
 import cn.hutool.core.date.DateUtil;
 import org.junit.Test;

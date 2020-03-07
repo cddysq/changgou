@@ -1,4 +1,4 @@
-package com.changgou.demo;
+package com.changgou.common.util;
 
 import com.changgou.common.util.DecimalToBinary;
 import org.junit.Assert;
