@@ -1,6 +1,5 @@
 package com.changgou.seckill.service.impl;
 
-import com.changgou.common.util.DateUtils;
 import com.changgou.seckill.pojo.SeckillGoods;
 import com.changgou.seckill.service.SecKillGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -411,13 +411,16 @@
                 })
             },
             add: function (id) {
-                axios.get("/api/wseckillorder/add?time=" + moment(app.dateMenus[0]).format("YYYYMMDDHH") + "&id=" + id).then(function (response) {
-                    if (response.data.flag) {
-                        app.msg = "抢单成功,即将进入支付";
-                    } else {
-                        app.msg = "抢单失败";
-                    }
-                })
+                axios.get("/api/wseckillorder/getToken").then(function (response) {
+                    const uuid = response.data;
+                    axios.get("/api/wseckillorder/add?time=" + moment(app.dateMenus[0]).format("YYYYMMDDHH") + "&id=" + id + "&random=" + uuid).then(function (response) {
+                        if (response.data.flag) {
+                            app.msg = "抢单成功,即将进入支付";
+                        } else {
+                            app.msg = "抢单失败";
+                        }
+                    });
+                });
             }
         },
         created: function () {

@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.changgou.seckill.config.ConfirmMessageSender;
 import com.changgou.seckill.config.RabbitMqConfig;
+import com.changgou.seckill.dao.SeckillOrderMapper;
 import com.changgou.seckill.pojo.SeckillGoods;
 import com.changgou.seckill.pojo.SeckillOrder;
 import com.changgou.seckill.service.SecKillOrderService;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: Haotian
@@ -37,9 +39,21 @@ public class SecKillOrderServiceImpl implements SecKillOrderService {
     private RedisTemplate redisTemplate;
     @Autowired
     private ConfirmMessageSender confirmMessageSender;
+    @Autowired
+    private SeckillOrderMapper seckillOrderMapper;
 
     @Override
     public boolean add(Long id, String time, String username) {
+        //防止用户恶意访问
+        String result = this.preventRepeatCommit( username, id );
+        if ("fail".equals( result )) {
+            return false;
+        }
+        //防止用户秒杀相同商品
+        SeckillOrder order = seckillOrderMapper.getOrderInfoByUserNameAndGoodsId( username, id );
+        if (order != null) {
+            return false;
+        }
         //1.获取redis中的商品信息与库存信息
         SeckillGoods seckillGoods = (SeckillGoods) redisTemplate.boundHashOps( SEC_KILL_GOODS_KEY + time ).get( id );
         if (ObjectUtil.isEmpty( seckillGoods )) {
@@ -66,5 +80,25 @@ public class SecKillOrderServiceImpl implements SecKillOrderService {
                 .status( "0" ).build();
         confirmMessageSender.sendMessage( "", RabbitMqConfig.SEC_KILL_ORDER_QUEUE, JSON.toJSONString( seckillOrder ) );
         return true;
+    }
+
+    /**
+     * 防止用户恶意访问
+     *
+     * @param username 用户名
+     * @param id       商品id
+     * @return 是否放行
+     */
+    private String preventRepeatCommit(String username, Long id) {
+        String redisKey = "secKill_user_" + username + "_id_" + id;
+        Long count = redisTemplate.opsForValue().increment( redisKey, 1 );
+        if (count == 1) {
+            //当前用户初次访问，设置五分钟有效期
+            redisTemplate.expire( redisKey, 5, TimeUnit.MINUTES );
+            return "success";
+        } else {
+            //非有效期内初次访问，拒绝
+            return "fail";
+        }
     }
 }
