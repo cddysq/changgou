@@ -26,6 +26,13 @@ public class SecKillOrderController {
     @Autowired
     private SecKillOrderService secKillOrderService;
 
+    /**
+     * 秒杀下单
+     *
+     * @param time 时间段
+     * @param id   商品id
+     * @return 提示信息
+     */
     @GetMapping("/add")
     public Result<Object> add(@RequestParam("time") String time, @RequestParam("id") Long id) {
         //1.获取当前登录用户名

@@ -1,6 +1,8 @@
 package com.changgou.seckill.web.controller;
 
 import com.changgou.common.pojo.Result;
+import com.changgou.seckill.feign.SecKillOrderFeign;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/wseckillorder")
 public class SecKillOrderController {
+    @Autowired
+    private SecKillOrderFeign secKillOrderFeign;
+
     /**
      * 抢单
      *
@@ -23,6 +28,6 @@ public class SecKillOrderController {
      */
     @GetMapping("/add")
     public Result<Object> add(@RequestParam("time") String time, @RequestParam("id") Long id) {
-        return null;
+        return secKillOrderFeign.add( time, id );
     }
 }

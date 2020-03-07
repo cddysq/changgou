@@ -24,6 +24,12 @@ public class ConsumerListener {
 
     @RabbitListener(queues = RabbitMqConfig.SEC_KILL_ORDER_QUEUE)
     public void receiveSecKillOrderMessage(Message message, Channel channel) {
+        //设置消息抓取总数
+        try {
+            channel.basicQos( 300 );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //1.转换消息格式
         SeckillOrder seckillOrder = JSON.parseObject( message.getBody(), SeckillOrder.class );
         //2.接收消息，进行异步下单扣减mysql中的库存数

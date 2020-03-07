@@ -23,6 +23,11 @@ import java.util.List;
 @Controller
 @RequestMapping("/wseckillgoods")
 public class SecKillGoodsController {
+    /**
+     * redis 中秒杀商品库存 key 前缀
+     */
+    private static final String SEC_KILL_GOODS_STOCK_COUNT_KEY = "sec_kill_goods_stock_count_key";
+
     @Autowired
     private SecKillGoodsFeign secKillGoodsFeign;
 
