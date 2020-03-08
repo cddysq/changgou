@@ -14,6 +14,7 @@
     <modules>
         <module>changgou_web_order</module>
         <module>changgou_web_seckill</module>
+        <module>changgou_web_user</module>
     </modules>
 
 

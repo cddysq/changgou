@@ -21,14 +21,13 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers( "/oauth/login",
-                "/oauth/logout", "/oauth/toLogin", "/login.html", "/css/**", "/data/**", "/fonts/**", "/img/**", "/js/**" );
+        web.ignoring().antMatchers( "/oauth/login", "/oauth/logout", "/oauth/toLogin", "/login.html",
+                "/oauth/toRegister","/oauth/register", "/register.html",
+                "/checkCode", "/validateCode/send4RRegister", "/css/**", "/data/**", "/fonts/**", "/img/**", "/js/**" );
     }
 
     /***
      * 创建授权管理认证对象
-     * @return
-     * @throws Exception
      */
     @Bean
     @Override

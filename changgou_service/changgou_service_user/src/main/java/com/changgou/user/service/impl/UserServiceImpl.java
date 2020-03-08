@@ -15,11 +15,13 @@ import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +54,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addUser(User user) {
-        userMapper.insertSelective( user );
+        if (user != null) {
+            user.setUsername( user.getPhone() );
+            user.setStatus( "1" );
+            user.setCreated( new Date() );
+            user.setUpdated( new Date() );
+            user.setIsMobileCheck( "1" );
+            this.bCryptPassword( user );
+            userMapper.insertSelective( user );
+            //更新redis中的用户名数据
+            redisTemplate.boundSetOps( "username" ).add( user.getUsername() );
+        }
     }
 
     @Override
@@ -112,6 +124,19 @@ public class UserServiceImpl implements UserService {
         redisTemplate.delete( task.getId() );
         log.info( "用户服务完成更改用户积分操作" );
         return 1;
+    }
+
+    /**
+     * 加密密码
+     *
+     * @param user 用户信息
+     */
+    private void bCryptPassword(User user) {
+        //获取盐
+        String salt = BCrypt.gensalt();
+        //对用户的密码进行加密
+        String newPassword = BCrypt.hashpw( user.getPassword(), salt );
+        user.setPassword( newPassword );
     }
 
     /**

@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @Author: Haotian
  * @Date: 2020/2/16 18:25
- * @Description: User 接口
+ * @Description: 用户接口
  **/
 @RestController
 @CrossOrigin
@@ -31,7 +31,7 @@ public class UserController {
      * @return 所有用户信息
      */
     @GetMapping
-    @PreAuthorize( "hasAnyAuthority('user')" )
+    @PreAuthorize("hasAnyAuthority('user')")
     public Result<List<User>> findAll() {
         return Result.<List<User>>builder()
                 .flag( true )
@@ -67,18 +67,18 @@ public class UserController {
     }
 
     /**
-     * 新增用户数据
+     * 新增用户
      *
      * @param user 新用户数据
      * @return 新增结果
      */
-    @PostMapping
+    @PostMapping("/add")
     public Result<Object> addUser(@RequestBody User user) {
         userService.addUser( user );
         return Result.builder()
                 .flag( true )
                 .code( StatusCode.OK )
-                .message( "添加成功" ).build();
+                .message( "注册成功" ).build();
     }
 
     /**
