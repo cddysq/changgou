@@ -5,8 +5,10 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.changgou.order.pojo.Task;
+import com.changgou.user.constant.UserStatusEnum;
 import com.changgou.user.dao.PointLogMapper;
 import com.changgou.user.dao.UserMapper;
+import com.changgou.user.exception.UserException;
 import com.changgou.user.pojo.PointLog;
 import com.changgou.user.pojo.User;
 import com.changgou.user.service.UserService;
@@ -54,17 +56,21 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addUser(User user) {
-        if (user != null) {
-            user.setUsername( user.getPhone() );
-            user.setStatus( "1" );
-            user.setCreated( new Date() );
-            user.setUpdated( new Date() );
-            user.setIsMobileCheck( "1" );
-            this.bCryptPassword( user );
-            userMapper.insertSelective( user );
-            //更新redis中的用户名数据
-            redisTemplate.boundSetOps( "username" ).add( user.getUsername() );
+        User addUser = userMapper.selectOne( User.builder().name( user.getPhone() ).build() );
+        //用户已经存在
+        if (addUser != null) {
+            throw new UserException( UserStatusEnum.USER_REPEAT );
         }
+        //正常新增用户
+        user.setUsername( user.getPhone() );
+        user.setStatus( "1" );
+        user.setCreated( new Date() );
+        user.setUpdated( new Date() );
+        user.setIsMobileCheck( "1" );
+        this.bCryptPassword( user );
+        userMapper.insertSelective( user );
+        //更新redis中的用户名数据
+        redisTemplate.boundSetOps( "username" ).add( user.getUsername() );
     }
 
     @Override

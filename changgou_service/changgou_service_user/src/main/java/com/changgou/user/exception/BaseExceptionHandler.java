@@ -1,5 +1,6 @@
 package com.changgou.user.exception;
 
+import com.changgou.common.exception.ExceptionMessage;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,16 @@ public class BaseExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Result<Object> error(Exception e) {
-        e.printStackTrace();
+        if (e instanceof UserException) {
+            //异常类型为自定义异常，抛出异常信息
+            UserException userException = (UserException) e;
+            ExceptionMessage message = userException.getExceptionMessage();
+            return Result.builder()
+                    .flag( message.isFlag() )
+                    .code( message.getCode() )
+                    .message( message.getMessage() ).build();
+        }
+        log.error( e.getMessage() );
         return Result.builder()
                 .flag( false )
                 .code( StatusCode.ERROR )
