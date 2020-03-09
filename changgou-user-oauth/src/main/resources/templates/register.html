@@ -175,7 +175,7 @@
                 validateCodeButton = $("#validateCodeButton")[0];
                 clock = window.setInterval(doLoop, 1000); //一秒执行一次
                 axios.get("/api/validateCode/send4RRegister?telephone=" + vue.pojo.phone).then((res) => {
-                    if (res.data.code) {
+                    if (res.data.flag) {
                         alert(res.data.message);
                     } else {
                         alert(res.data.message);
@@ -189,7 +189,7 @@
                 }
                 //进行注册
                 axios.post("/api/oauth/register?checkCode=" + vue.checkCode + "&smsCode=" + vue.smsCode, vue.pojo).then((res) => {
-                    if (res.data.code) {
+                    if (res.data.flag) {
                         alert(res.data.message);
                     } else {
                         alert(res.data.message);
