@@ -67,7 +67,9 @@ public class UserServiceImpl implements UserService {
         user.setCreated( new Date() );
         user.setUpdated( new Date() );
         user.setIsMobileCheck( "1" );
-        this.bCryptPassword( user );
+        //加密密码
+        String newPassword = this.bCryptPassword( user.getPassword() );
+        user.setPassword( newPassword );
         userMapper.insertSelective( user );
         //更新redis中的用户名数据
         redisTemplate.boundSetOps( "username" ).add( user.getUsername() );
@@ -77,6 +79,32 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void updateUser(User user) {
         userMapper.updateByPrimaryKeySelective( user );
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updatePassword(String username, String password) {
+        //加密密码
+        String bCryptPassword = this.bCryptPassword( password );
+        int i = userMapper.updatePassword( username, bCryptPassword );
+        return i > 0;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updatePhone(String username, String newPhone) {
+        //根据手机号查询用户
+        User user = userMapper.selectOne( User.builder().phone( newPhone ).build() );
+        if (user != null) {
+            //手机号被其他用户占用
+            return 2;
+        }
+        //未占用
+        int i = userMapper.updatePhone( username, newPhone );
+        if (i <= 0) {
+            return 0;
+        }
+        return 1;
     }
 
     @Override
@@ -135,14 +163,13 @@ public class UserServiceImpl implements UserService {
     /**
      * 加密密码
      *
-     * @param user 用户信息
+     * @param password 代加密的密码
      */
-    private void bCryptPassword(User user) {
+    private String bCryptPassword(String password) {
         //获取盐
         String salt = BCrypt.gensalt();
         //对用户的密码进行加密
-        String newPassword = BCrypt.hashpw( user.getPassword(), salt );
-        user.setPassword( newPassword );
+        return BCrypt.hashpw( password, salt );
     }
 
     /**

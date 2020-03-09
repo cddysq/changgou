@@ -3,10 +3,7 @@ package com.changgou.user.feign;
 import com.changgou.common.pojo.Result;
 import com.changgou.user.pojo.User;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: Haotian
@@ -33,4 +30,30 @@ public interface UserFeign {
      */
     @PostMapping("/user/add")
     Result<Object> addUser(@RequestBody User user);
+
+    /**
+     * 修改用户密码
+     *
+     * @param password 用户密码
+     * @return 提示信息
+     */
+    @PutMapping("/user/resetPassword")
+    Result<Object> resetPassword(@RequestBody String password);
+
+    /**
+     * 根据用户名查询用户数据
+     *
+     * @return 用户信息
+     */
+    @GetMapping("/user/findUser")
+    Result<User> findById();
+
+    /**
+     * 修改用户手机号
+     *
+     * @param phone 新手机号
+     * @return 提示信息
+     */
+    @PutMapping("/user/resetPhone")
+    Result<Object> resetPhone(@RequestParam("phone") String phone);
 }

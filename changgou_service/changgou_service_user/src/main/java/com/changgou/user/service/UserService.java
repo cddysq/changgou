@@ -75,4 +75,22 @@ public interface UserService {
      * @return 是否更新成功
      */
     int updateUserPoint(Task task);
+
+    /**
+     * 修改用户密码
+     *
+     * @param username 用户名
+     * @param password 用户密码
+     * @return true:成功 false:失败
+     */
+    boolean updatePassword(String username, String password);
+
+    /**
+     * 修改用户手机号
+     *
+     * @param username 用户名
+     * @param newPhone 新手机号
+     * @return 0:系统异常 1:修改成功 2:手机号已占用
+     */
+    int updatePhone(String username, String newPhone);
 }

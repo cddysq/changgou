@@ -3,6 +3,7 @@ package com.changgou.user.controller;
 import com.changgou.common.pojo.PageResult;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
+import com.changgou.user.config.TokenDecode;
 import com.changgou.user.pojo.User;
 import com.changgou.user.service.UserService;
 import com.github.pagehelper.Page;
@@ -24,6 +25,8 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private TokenDecode tokenDecode;
 
     /**
      * 查询全部用户数据
@@ -54,11 +57,12 @@ public class UserController {
     /**
      * 根据用户名查询用户数据
      *
-     * @param username 用户名
      * @return 用户信息
      */
-    @GetMapping("/{username}")
-    public Result<User> findById(@PathVariable("username") String username) {
+    @GetMapping("/findUser")
+    public Result<User> findById() {
+        //获取当前登录用户名
+        String username = tokenDecode.getUserInfo().get( "username" );
         return Result.<User>builder()
                 .flag( true )
                 .code( StatusCode.OK )
@@ -96,6 +100,59 @@ public class UserController {
                 .flag( true )
                 .code( StatusCode.OK )
                 .message( "修改成功" ).build();
+    }
+
+    /**
+     * 修改用户密码
+     *
+     * @param password 用户密码
+     * @return 提示信息
+     */
+    @PutMapping("/resetPassword")
+    public Result<Object> resetPassword(@RequestBody String password) {
+        //获取当前登录用户名
+        String username = tokenDecode.getUserInfo().get( "username" );
+        boolean flag = userService.updatePassword( username, password );
+        if (flag) {
+            return Result.builder()
+                    .flag( true )
+                    .code( StatusCode.OK )
+                    .message( "密码修改成功" ).build();
+        }
+        return Result.builder()
+                .flag( false )
+                .code( StatusCode.ERROR )
+                .message( "密码修改失败" ).build();
+    }
+
+    /**
+     * 修改用户手机号
+     *
+     * @param phone 新手机号
+     * @return 提示信息
+     */
+        @PutMapping("/resetPhone")
+        public Result<Object> resetPhone(@RequestParam("phone") String phone) {
+        //获取当前登录用户名
+        String username = tokenDecode.getUserInfo().get( "username" );
+        int i = userService.updatePhone( username, phone );
+        switch (i) {
+            case 1:
+                return Result.builder()
+                        .flag( true )
+                        .code( StatusCode.OK )
+                        .message( "手机号修改成功" ).build();
+            case 2:
+                return Result.builder()
+                        .flag( false )
+                        .code( StatusCode.ERROR )
+                        .message( "该手机号已被占用" ).build();
+            default:
+                return Result.builder()
+                        .flag( false )
+                        .code( StatusCode.ERROR )
+                        .message( "系统异常，请稍后重试" ).build();
+        }
     }
 
     /**

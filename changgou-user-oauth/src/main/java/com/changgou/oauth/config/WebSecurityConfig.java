@@ -22,7 +22,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers( "/oauth/login", "/oauth/logout", "/oauth/toLogin", "/login.html",
-                "/oauth/toRegister","/oauth/register", "/register.html",
+                "/oauth/toRegister", "/oauth/register", "/register.html",
                 "/checkCode", "/validateCode/send4RRegister", "/css/**", "/data/**", "/fonts/**", "/img/**", "/js/**" );
     }
 
@@ -37,22 +37,22 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /***
      * 采用BCryptPasswordEncoder对密码进行编码
-     * @return
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /****
-     *
-     * @param http
-     * @throws Exception
-     */
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .httpBasic()        //启用Http基本身份验证
+                .and()
+                .logout()
+                //清除指定cookie
+                .deleteCookies( "uid" )
+                //退出成功跳转登录
+                .logoutSuccessUrl( "http://localhost:9102/api/oauth/toLogin" )
                 .and()
                 .formLogin()       //启用表单身份验证
                 .and()
