@@ -8,4 +8,4 @@
 out
 gen
 /target
-!/src/main/java/com/changgou/common/util/SmsUtils.java
+!/src/main/java/com/changgou/logistics/util/QueryCourierUtil.java

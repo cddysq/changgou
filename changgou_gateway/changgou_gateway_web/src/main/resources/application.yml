@@ -69,6 +69,13 @@ spring:
             - Path=/api/wuser/**,/api/wcode/**
           filters:
             - StripPrefix=1
+        #快递服务
+        - id: changgou_logistic_route
+          uri: lb://logistic
+          predicates:
+            - Path=/api/logistics/**
+          filters:
+            - StripPrefix=1
   redis:
     host: 192.168.200.128
 server:

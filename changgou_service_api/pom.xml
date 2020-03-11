@@ -20,6 +20,7 @@
         <module>changgou_service_order_api</module>
         <module>changgou_service_pay_api</module>
         <module>changgou_service_seckill_api</module>
+        <module>changgou-service-logistics-api</module>
     </modules>
 
     <dependencies>
