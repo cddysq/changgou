@@ -22,6 +22,6 @@ public class OrderTimeOutListener {
     public void receiveCloseOrderMessage(String message) {
         log.info( "接收到关闭订单消息，当前超时订单为：{}", message );
         //调用业务层完成订单关闭
-        orderService.closeOrder(message);
+        orderService.closeOrder( message );
     }
 }

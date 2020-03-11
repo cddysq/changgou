@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @Author: Haotian
  * @Date: 2020/2/29 14:31
@@ -48,9 +51,15 @@ public class RabbitMqConfig {
     public static final String QUEUE_ORDER_CREATE = "queue.ordercreate";
 
     /**
-     * 订单超时消息队列
+     * 订单延迟消息接收队列
      */
     public static final String QUEUE_ORDER_TIMEOUT = "queue.ordertimeout";
+
+    /**
+     * 订单超时死信交换机
+     */
+    public static final String EXCHANGE_ORDER_TIMEOUT = "exchange.ordertimeout";
+
 
     /**
      * 自动收货消息队列
@@ -65,6 +74,11 @@ public class RabbitMqConfig {
         return ExchangeBuilder.directExchange( EX_BUYING_ADD_POINT_USER ).durable( true ).build();
     }
 
+    @Bean(EXCHANGE_ORDER_TIMEOUT)
+    public FanoutExchange exchange_order_timeout() {
+        return new FanoutExchange( EXCHANGE_ORDER_TIMEOUT );
+    }
+
     /**
      * 声明队列
      */
@@ -76,6 +90,21 @@ public class RabbitMqConfig {
     @Bean(CG_BUYING_FINISH_ADD_POINT)
     public Queue cg_buying_finish_add_point() {
         return new Queue( CG_BUYING_FINISH_ADD_POINT );
+    }
+
+    @Bean(QUEUE_ORDER_TIMEOUT)
+    public Queue queue_order_timeout() {
+        return QueueBuilder.durable( QUEUE_ORDER_TIMEOUT ).build();
+    }
+
+    @Bean(QUEUE_ORDER_CREATE)
+    public Queue queue_order_create() {
+        Map<String, Object> args = new HashMap<>( 2 );
+        //x-message-ttl 声明 消息过期时间
+        args.put( "x-message-ttl", 10000 );
+        //x-dead-letter-exchange    声明 死信交换机
+        args.put( "x-dead-letter-exchange", EXCHANGE_ORDER_TIMEOUT );
+        return QueueBuilder.durable( QUEUE_ORDER_CREATE ).withArguments( args ).build();
     }
 
     @Bean
@@ -99,5 +128,10 @@ public class RabbitMqConfig {
     @Bean
     Binding binding_cg_buying_finish_add_point(@Qualifier(CG_BUYING_FINISH_ADD_POINT) Queue queue, @Qualifier(EX_BUYING_ADD_POINT_USER) Exchange exchange) {
         return BindingBuilder.bind( queue ).to( exchange ).with( CG_BUYING_FINISH_ADD_POINT_KEY ).noargs();
+    }
+
+    @Bean
+    Binding binding_queue_order_timeout(@Qualifier(QUEUE_ORDER_TIMEOUT) Queue queue, @Qualifier(EXCHANGE_ORDER_TIMEOUT) FanoutExchange fanoutExchange) {
+        return BindingBuilder.bind( queue ).to( fanoutExchange );
     }
 }
