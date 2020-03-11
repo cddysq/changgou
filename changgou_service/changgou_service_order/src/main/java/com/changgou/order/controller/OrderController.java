@@ -1,15 +1,20 @@
 package com.changgou.order.controller;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.changgou.common.pojo.PageResult;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
 import com.changgou.order.config.TokenDecode;
 import com.changgou.order.pojo.Order;
+import com.changgou.order.pojo.OrderInfoCount;
 import com.changgou.order.service.OrderService;
 import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -156,5 +161,28 @@ public class OrderController {
                 .code( StatusCode.OK )
                 .message( "批量发货成功" )
                 .data( message ).build();
+    }
+
+    /**
+     * 查询订单统计信息
+     *
+     * @param startTime 开始时间戳
+     * @param endTime   结束时间戳
+     * @return 统计信息集合
+     */
+    @GetMapping("/orderInfoData")
+    public List<OrderInfoCount> getOrderInfoData(@RequestParam(required = false) String startTime,
+                                                 @RequestParam(required = false) String endTime) {
+        Date start = null;
+        if (StrUtil.isNotBlank( startTime )) {
+            //有开始时间，定为当天凌晨
+            start = DateUtil.beginOfDay( DateUtil.date( Convert.toLong( startTime ) ) );
+        }
+        Date end = null;
+        if (StrUtil.isNotBlank( startTime )) {
+            //有结束时间，定为当天结束
+            end = DateUtil.endOfDay( DateUtil.date( Convert.toLong( endTime ) ) );
+        }
+        return orderService.findAllInfoCount( start, end );
     }
 }

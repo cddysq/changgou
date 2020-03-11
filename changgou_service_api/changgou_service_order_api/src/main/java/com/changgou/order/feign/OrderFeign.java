@@ -2,11 +2,11 @@ package com.changgou.order.feign;
 
 import com.changgou.common.pojo.Result;
 import com.changgou.order.pojo.Order;
+import com.changgou.order.pojo.OrderInfoCount;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Author: Haotian
@@ -32,4 +32,15 @@ public interface OrderFeign {
      */
     @GetMapping("/order/{id}")
     Result<Order> findById(@PathVariable("id") String id);
+
+    /**
+     * 查询订单统计信息
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return 统计信息集合
+     */
+    @GetMapping("/order/orderInfoData")
+    List<OrderInfoCount> getOrderInfoData(@RequestParam(required = false) String startTime,
+                                                  @RequestParam(required = false) String endTime);
 }

@@ -1,6 +1,8 @@
 package com.changgou.order.service.impl;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
@@ -290,6 +292,45 @@ public class OrderServiceImpl implements OrderService {
         return PageHelper
                 .startPage( pageNum, pageSize )
                 .doSelectPage( () -> orderMapper.selectByExample( getExample( searchMap ) ) );
+    }
+
+    @Override
+    public List<OrderInfoCount> findAllInfoCount(Date startTime, Date endTime) {
+        //得到当前时间
+        DateTime nowDate = DateUtil.date();
+        if (startTime == null) {
+            //默认开始时间=当前时间前一周当天凌晨
+            startTime = DateUtil.beginOfDay( DateUtil.offsetWeek( nowDate, -1 ) );
+        }
+        if (endTime == null) {
+            //默认结束时间=当前时间
+            endTime = nowDate;
+        }
+        //判断结束时间是否 > 当前时间
+        int compare = DateUtil.compare( endTime, nowDate );
+        if (compare > 0) {
+            endTime = nowDate;
+        }
+        //数量过少，统一增加查看效果
+        int number = 100;
+        //统计信息集合
+        List<OrderInfoCount> dataList = new ArrayList<>();
+        dataList.add( OrderInfoCount.builder()
+                .name( "待付款订单" )
+                .value( orderMapper.waitPayMoneyCount( startTime, endTime ) + number ).build() );
+        dataList.add( OrderInfoCount.builder()
+                .name( "待发货订单" )
+                .value( orderMapper.waitSendGoodsCount( startTime, endTime ) + number ).build() );
+        dataList.add( OrderInfoCount.builder()
+                .name( "已发货订单" )
+                .value( orderMapper.shippedGoodsCount( startTime, endTime ) + number ).build() );
+        dataList.add( OrderInfoCount.builder()
+                .name( "已完成订单" )
+                .value( orderMapper.completedCount( startTime, endTime ) + number ).build() );
+        dataList.add( OrderInfoCount.builder()
+                .name( "已关闭订单" )
+                .value( orderMapper.closeOrderCount( startTime, endTime ) + number ).build() );
+        return dataList;
     }
 
     @Override

@@ -2,8 +2,10 @@ package com.changgou.order.service;
 
 
 import com.changgou.order.pojo.Order;
+import com.changgou.order.pojo.OrderInfoCount;
 import com.github.pagehelper.Page;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -103,4 +105,13 @@ public interface OrderService {
      * 自动收货
      */
     void autoTack();
+
+    /**
+     * 查找所有订单统计信息
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return 订单统计信息集合
+     */
+    List<OrderInfoCount> findAllInfoCount(Date startTime, Date endTime);
 }
