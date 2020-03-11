@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>订单分析统计</title>
+    <!-- 引入组件库 -->
+    <script type="text/javascript" src="/js/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@4.6.0/dist/echarts.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script type="text/javascript" src="/js/axios.js"></script>
+</head>
+<style>
+    .box {
+        position: relative;
+        border-radius: 3px;
+        background: #ffffff;
+        border-top: 3px solid #3c8dbc;
+        margin-bottom: 20px;
+        width: 100%;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    }
+
+    .right-container {
+        float: right;
+        margin: 20px 10px 20px 0;
+    }
+
+    .chart {
+        height: 800px;
+        margin: 40px auto;
+    }
+</style>
+<body>
+<div id="app">
+    <el-container>
+        <el-header>
+            <h2>统计分析</h2>
+        </el-header>
+        <el-main>
+            <div class="box">
+                <div class="right-container">
+                    开始时间：
+                    <el-date-picker
+                            v-model="startTime"
+                            type="date"
+                            value-format="timestamp"
+                            placeholder="选择日期">
+                    </el-date-picker>
+                    结束时间：
+                    <el-date-picker
+                            v-model="endTime"
+                            type="datetime"
+                            value-format="timestamp"
+                            placeholder="选择日期时间">
+                    </el-date-picker>
+                    <el-button type="info" plain @click="findSpecifiedInformation">查询</el-button>
+                    <el-button @click="exportExcel">导出Excel</el-button>
+                </div>
+                <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                <div id="chart" class="chart"></div>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script type="text/javascript">
+    let vue = new Vue({
+        el: '#app',
+        data: {
+            infoName: "",
+            infoData: "",
+            startTime: "",
+            endTime: "",
+            myOption: {
+                title: {
+                    text: '爱购商城订单统计概况',
+                    subtext: 'Author：Haotian',
+                    left: 'center'
+                },
+                tooltip: { //提示框组件
+                    trigger: 'item', //触发类型，在饼形图中为item
+                    formatter: '{a} <br/>{b} : {c} ({d}%)', //提示内容格式
+                    textStyle: {
+                        fontSize: 18
+                    }
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: "",
+                    textStyle: {
+                        fontSize: 18
+                    }
+                },
+                series: [
+                    {
+                        name: '订单分析',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '60%'],
+                        data: [],
+                        label: {
+                            normal: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: 20
+                                }
+                            }
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            }
+        }, methods: {
+            init() {
+                // 基于准备好的dom，初始化echarts实例
+                let myChart = echarts.init(document.getElementById('chart'), 'light');
+                //绘制图表
+                myChart.setOption(this.myOption, true);
+            },
+            findData() {
+                axios.get("/api/echarts/orderInfoCount").then((res) => {
+                    if (res.data.flag) {
+                        this.infoData = res.data.data.infoData;
+                        //进行数据赋值
+                        this.myOption.legend.data = res.data.data.infoName;
+                        this.myOption.series[0].data = res.data.data.infoData;
+                    } else {
+                        this.$message().error(res.data.message);
+                    }
+                }).catch((res) => {
+                    this.$message.error('连接失败，请检查网络！');
+                });
+            },
+            exportExcel() {
+                axios.post("/api/echarts/exportOderInfoCount", vue.infoData, {
+                    responseType: 'blob'
+                }).then((res) => {
+                    // 下载文件
+                    const blob = new Blob([res.data], {type: res.headers['content-type']});//得到请求头类型
+                    const downloadElement = document.createElement('a');
+                    const href = window.URL.createObjectURL(blob); //创建下载的链接
+                    downloadElement.href = href;
+                    downloadElement.download = 'report.xlsx'; //下载后文件名
+                    document.body.appendChild(downloadElement);
+                    downloadElement.click(); //点击下载
+                    document.body.removeChild(downloadElement); //下载完成移除元素
+                    window.URL.revokeObjectURL(href); //释放掉blob对象
+                }).catch((res) => {
+                    this.$message.error('连接失败，请检查网络！');
+                });
+            },
+            findSpecifiedInformation() {
+                axios.get("/api/echarts/orderInfoCount?startTime=" + vue.startTime + "&endTime=" + vue.endTime).then((res) => {
+                    if (res.data.flag) {
+                        this.infoData = res.data.data.infoData;
+                        //进行数据赋值
+                        this.myOption.legend.data = res.data.data.infoName;
+                        this.myOption.series[0].data = res.data.data.infoData;
+                    } else {
+                        this.$message().error(res.data.message);
+                    }
+                }).catch((res) => {
+                    this.$message.error('连接失败，请检查网络！');
+                });
+            }
+        },
+        //数据自动刷新，必然需要一个监听机制告诉Echarts重新设置数据
+        watch: {
+            //观察option的变化
+            myOption: {
+                handler(newVal, oldVal) {
+                    if (this.myChart) {
+                        if (newVal) {
+                            this.myChart.setOption(newVal);
+                        } else {
+                            this.myChart.setOption(oldVal);
+                        }
+                    } else {
+                        this.init();
+                    }
+                },
+                deep: true //对象内部属性的监听，关键。
+            }
+        },
+        mounted() {
+            this.findData();
+            this.init();
+        }
+    });
+</script>
+</html>
