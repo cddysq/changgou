@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
+import com.changgou.logistics.constant.LogisticsStatusEnum;
+import com.changgou.logistics.exception.LogisticsException;
 import com.changgou.logistics.util.QueryCourierUtil;
 import com.changgou.logistics.pojo.ResultData;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +29,10 @@ public class QueryLogisticsController {
      * @return 快递信息
      */
     @GetMapping("/findOrderLogistics")
-    public Result<Object> findOrderLogistics(@RequestParam("id") String orderId,
-                                             @RequestParam(required = false, name = "courierCompany") String courierCompany) {
+    public Result<ResultData> findOrderLogistics(@RequestParam("id") String orderId,
+                                                 @RequestParam(required = false, name = "courierCompany") String courierCompany) {
         if (StrUtil.isBlank( orderId )) {
-            return Result.builder().flag( false ).code( StatusCode.ERROR ).message( "非法访问" ).build();
+            throw new LogisticsException( LogisticsStatusEnum.ILLEGAL_ACCESS );
         }
 
         if (StrUtil.isBlank( courierCompany )) {
@@ -38,7 +40,7 @@ public class QueryLogisticsController {
         }
         String json = QueryCourierUtil.queryCourier( orderId, courierCompany );
         ResultData resultData = JSON.parseObject( json, ResultData.class );
-        return Result.builder()
+        return Result.<ResultData>builder()
                 .flag( true )
                 .code( StatusCode.OK )
                 .message( "查询物流信息成功" )

@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum LogisticsStatusEnum implements ExceptionMessage {
     SYSTEM_ERROR( false, StatusCode.ERROR, "系统异常，请稍后重试" ),
-    ;
+    ILLEGAL_ACCESS( false, StatusCode.ERROR, "非法访问" );
     private boolean flag;
     private Integer code;
     private String message;

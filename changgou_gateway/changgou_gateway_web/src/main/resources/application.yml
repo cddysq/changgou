@@ -69,11 +69,18 @@ spring:
             - Path=/api/wuser/**,/api/wcode/**
           filters:
             - StripPrefix=1
-        #快递服务
+        #物流服务
         - id: changgou_logistic_route
           uri: lb://logistic
           predicates:
             - Path=/api/logistics/**
+          filters:
+            - StripPrefix=1
+        #物流渲染服务
+        - id: changgou_logistic_web_route
+          uri: lb://logistics-web
+          predicates:
+            - Path=/api/wlogistics/**
           filters:
             - StripPrefix=1
   redis:
