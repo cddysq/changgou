@@ -5,7 +5,6 @@ import com.changgou.common.pojo.StatusCode;
 import com.changgou.seckill.config.TokenDecode;
 import com.changgou.seckill.service.SecKillOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

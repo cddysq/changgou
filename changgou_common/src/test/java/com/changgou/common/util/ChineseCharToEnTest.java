@@ -1,6 +1,5 @@
 package com.changgou.common.util;
 
-import com.changgou.common.util.ChineseCharToEn;
 import org.junit.Assert;
 import org.junit.Test;
 
