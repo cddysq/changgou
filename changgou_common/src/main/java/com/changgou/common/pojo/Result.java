@@ -5,9 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- * @Author: Haotian
- * @Date: 2020/1/23 22:52
- * @Description: 返回结果实体类
+ * 返回结果实体类
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/7/30 15:24
  **/
 @Data
 @AllArgsConstructor

@@ -1,10 +1,12 @@
 package com.changgou.common.exception;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/12 16:21
- * @Description: 异常返回信息
- */
+ * 异常返回信息
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/7/30 15:23
+ **/
 public interface ExceptionMessage {
     /**
      * 获取处理是否成功

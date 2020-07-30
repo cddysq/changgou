@@ -6,11 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
 /**
-* @Author: Haotian
-* @Date: 2020/1/23 22:48
-* @Description: 分页结果
-**/
+ * 分页结果
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/7/30 15:26
+ **/
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -43,7 +43,8 @@ public class DateUtils {
     public static Date addDateMinutes(Date date, int minutes) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime( date );
-        calendar.add( Calendar.MINUTE, minutes );// 24小时制
+        // 24小时制
+        calendar.add( Calendar.MINUTE, minutes );
         date = calendar.getTime();
         return date;
     }
@@ -54,7 +55,8 @@ public class DateUtils {
     public static Date addDateHour(Date date, int hour) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime( date );
-        calendar.add( Calendar.HOUR, hour );// 24小时制
+        // 24小时制
+        calendar.add( Calendar.HOUR, hour );
         date = calendar.getTime();
         return date;
     }
@@ -64,28 +66,29 @@ public class DateUtils {
      */
     public static List<Date> getDateMenus() {
 
-        //定义一个List<Date>集合，存储所有时间段
-        List<Date> dates = new ArrayList<Date>();
+        // 定义一个List<Date>集合，存储所有时间段
+        List<Date> dates = new ArrayList<>();
 
-        //循环12次
-        Date date = toDayStartHour( new Date() ); //凌晨
+        // 凌晨
+        Date date = toDayStartHour( new Date() );
+        // 循环12次
         for (int i = 0; i < 12; i++) {
-            //每次递增2小时,将每次递增的时间存入到List<Date>集合中
+            // 每次递增2小时,将每次递增的时间存入到List<Date>集合中
             dates.add( addDateHour( date, i * 2 ) );
         }
 
-        //判断当前时间属于哪个时间范围
+        // 判断当前时间属于哪个时间范围
         Date now = new Date();
         for (Date cdate : dates) {
-            //开始时间<=当前时间<开始时间+2小时
+            // 开始时间<=当前时间<开始时间+2小时
             if (cdate.getTime() <= now.getTime() && now.getTime() < addDateHour( cdate, 2 ).getTime()) {
                 now = cdate;
                 break;
             }
         }
 
-        //当前需要显示的时间菜单
-        List<Date> dateMenus = new ArrayList<Date>();
+        // 当前需要显示的时间菜单
+        List<Date> dateMenus = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
             dateMenus.add( addDateHour( now, i * 2 ) );

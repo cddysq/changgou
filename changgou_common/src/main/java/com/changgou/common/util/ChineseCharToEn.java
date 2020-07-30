@@ -5,10 +5,12 @@ import cn.hutool.core.util.StrUtil;
 import java.io.UnsupportedEncodingException;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/13 20:14
- * @Description: 取得给定汉字串的首字母串, 即声母串  注：只支持GB2312字符集中的汉字
- */
+ * 取得给定汉字串的首字母串, 即声母串  注：只支持GB2312字符集中的汉字
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/7/30 15:21
+ **/
 public class ChineseCharToEn {
     private static class SingletonClassInstance {
         private static final ChineseCharToEn INSTANCE = new ChineseCharToEn();
@@ -64,11 +66,14 @@ public class ChineseCharToEn {
 
         // 判断是不是汉字
         if (chinese.length() > 1) {
-            int liSectorCode = (int) chinese.charAt( 0 ); // 汉字区码
-            int liPositionCode = (int) chinese.charAt( 1 ); // 汉字位码
+            // 汉字区码
+            int liSectorCode = chinese.charAt( 0 );
+            // 汉字位码
+            int liPositionCode = chinese.charAt( 1 );
             liSectorCode = liSectorCode - 160;
             liPositionCode = liPositionCode - 160;
-            int liSecPosCode = liSectorCode * 100 + liPositionCode; // 汉字区位码
+            // 汉字区位码
+            int liSecPosCode = liSectorCode * 100 + liPositionCode;
             if (liSecPosCode > 1600 && liSecPosCode < 5590) {
                 for (int i = 0; i < 23; i++) {
                     if (liSecPosCode >= LI_SEC_POS_VALUE[i]

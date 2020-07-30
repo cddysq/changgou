@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/17 20:36
- * @Description: 十进制转二进制
- */
+ * 十进制转二进制
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/7/30 15:30
+ **/
 public class DecimalToBinary {
     public static String convert(Integer number) {
         List<Integer> list = new ArrayList<>();

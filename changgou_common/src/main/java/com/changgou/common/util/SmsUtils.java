@@ -17,8 +17,8 @@ import java.util.Map;
  * @Description: 短信发送工具类
  */
 public class SmsUtils {
-    private static final String ACCESSKEYID = "";
-    private static final String ACCESSKEYSECRET = "";
+    private static final String ACCESSKEYID = "LTAI4FvW1pB55RxgiDA4FNJV";
+    private static final String ACCESSKEYSECRET = "e52TSSbx3ZbgUJbU5FUsyUH9z5QgTw";
     /**
      * 短信发送成功返回状态码
      */

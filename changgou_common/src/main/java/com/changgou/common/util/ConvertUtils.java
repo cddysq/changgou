@@ -3,11 +3,14 @@ package com.changgou.common.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
- * @Author: Haotian
- * @Date: 2020/3/1 23:19
- * @Description: 转换工具类
+ * 转换工具类
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/7/30 15:26
  **/
 public class ConvertUtils {
 
@@ -26,6 +29,6 @@ public class ConvertUtils {
         }
         outSteam.close();
         inputStream.close();
-        return new String( outSteam.toByteArray(), "utf-8" );
+        return new String( outSteam.toByteArray(), StandardCharsets.UTF_8 );
     }
 }

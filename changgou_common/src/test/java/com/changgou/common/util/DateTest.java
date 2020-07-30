@@ -4,10 +4,12 @@ import cn.hutool.core.date.DateUtil;
 import org.junit.Test;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/13 19:39
- * @Description: 计算两个时相差天数
- */
+ * 计算两个时相差天数
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/7/30 15:31
+ **/
 public class DateTest {
     @Test
     public void timeDifference() {
