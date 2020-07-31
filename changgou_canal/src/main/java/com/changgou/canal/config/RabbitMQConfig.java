@@ -6,10 +6,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/18 19:51
- * @Description: MQ 配置类
- */
+ * MQ 配置类
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/7/31 15:44
+ **/
 @Configuration
 public class RabbitMQConfig {
     /**
@@ -31,25 +33,25 @@ public class RabbitMQConfig {
      */
     @Bean
     public Queue queue() {
-        //广告队列
+        // 广告队列
         return new Queue( AD_UPDATE_QUEUE );
     }
 
     @Bean(SEARCH_ADD_QUEUE)
     public Queue search_add_queue() {
-        //商品上架队列
+        // 商品上架队列
         return new Queue( SEARCH_ADD_QUEUE );
     }
 
     @Bean(SEARCH_DEL_QUEUE)
     public Queue search_del_queue() {
-        //商品下架队列
+        // 商品下架队列
         return new Queue( SEARCH_DEL_QUEUE );
     }
 
     @Bean(PAGE_CREATE_QUEUE)
     public Queue page_create_queue() {
-        //静态页生成队列
+        // 静态页生成队列
         return new Queue( PAGE_CREATE_QUEUE );
     }
 
@@ -58,13 +60,13 @@ public class RabbitMQConfig {
      */
     @Bean(GOODS_UP_EXCHANGE)
     public Exchange goods_up_exchange() {
-        //商品上架交换机
+        // 商品上架交换机
         return ExchangeBuilder.fanoutExchange( GOODS_UP_EXCHANGE ).durable( true ).build();
     }
 
     @Bean(GOODS_DOWN_EXCHANGE)
     public Exchange goods_down_exchange() {
-        //商品下架交换机
+        // 商品下架交换机
         return ExchangeBuilder.fanoutExchange( GOODS_DOWN_EXCHANGE ).durable( true ).build();
     }
 
