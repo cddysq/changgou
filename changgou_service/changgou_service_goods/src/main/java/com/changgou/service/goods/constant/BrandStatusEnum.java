@@ -5,14 +5,16 @@ import com.changgou.common.pojo.StatusCode;
 import lombok.AllArgsConstructor;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/12 17:02
- * @Description: 品牌异常信息
- */
+ * 品牌异常信息
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 15:47
+ **/
 @AllArgsConstructor
 public enum BrandStatusEnum implements ExceptionMessage {
-    BRAND_REPEAT(false, StatusCode.ERROR,"品牌已经存在" ),
-    GOODS_VANISH(false, StatusCode.ERROR,"当前商品不存在");
+    BRAND_REPEAT( false, StatusCode.ERROR, "品牌已经存在" ),
+    GOODS_VANISH( false, StatusCode.ERROR, "当前商品不存在" );
     private boolean flag;
     private Integer code;
     private String message;

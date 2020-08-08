@@ -8,10 +8,12 @@ import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/15 23:12
- * @Description: spu spk 共有条件
- */
+ * spu spk 共有条件
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 15:47
+ **/
 public class Condition {
     public static void share(@NotNull Map<String, Object> searchMap, Example.Criteria criteria) {
         // 商品id

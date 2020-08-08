@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/15 22:26
- * @Description: sku服务实现
+ * sku服务实现
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 16:03
  **/
 @Service
 public class SkuServiceImpl implements SkuService {
@@ -76,9 +78,9 @@ public class SkuServiceImpl implements SkuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void decrCount(String username) {
-        //1.获取购物车的数据
+        // 1.获取购物车的数据
         List<OrderItem> orderItemList = redisTemplate.boundHashOps( "cart_" + username ).values();
-        //2.循环扣减库存增加销量
+        // 2.循环扣减库存增加销量
         for (OrderItem orderItem : orderItemList) {
             int count = skuMapper.decrCount( orderItem );
             if (count <= 0) {

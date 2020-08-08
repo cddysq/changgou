@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Haotian
- * @Date: 2020/1/24 14:26
- * @Description: 品牌服务
- */
+ * 品牌服务
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 16:02
+ **/
 public interface BrandService {
     /**
      * 查询所有品牌

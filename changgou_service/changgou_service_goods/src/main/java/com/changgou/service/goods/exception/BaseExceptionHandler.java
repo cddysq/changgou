@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * @Author: Haotian
- * @Date: 2020/1/24 20:10
- * @Description: 公共异常处理
- */
+ * 公共异常处理
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 16:00
+ **/
 @ControllerAdvice
 @Slf4j
 public class BaseExceptionHandler {
@@ -20,7 +22,7 @@ public class BaseExceptionHandler {
     @ResponseBody
     public Result<Object> error(Exception e) {
         if (e instanceof GoodsException) {
-            //异常类型为自定义异常，抛出异常信息
+            // 异常类型为自定义异常，抛出异常信息
             GoodsException goodsException = (GoodsException) e;
             ExceptionMessage message = goodsException.getExceptionMessage();
             return Result.builder()

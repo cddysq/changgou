@@ -4,10 +4,12 @@ import com.changgou.common.exception.ExceptionMessage;
 import lombok.Getter;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/12 16:15
- * @Description: 品牌异常
- */
+ * 品牌异常
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 16:00
+ **/
 @Getter
 public class GoodsException extends RuntimeException {
     private static final long serialVersionUID = 8482500389681789675L;

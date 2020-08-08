@@ -16,10 +16,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Haotian
- * @Date: 2020/1/25 17:29
- * @Description: 规格服务逻辑
- */
+ * 规格服务逻辑
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 16:03
+ **/
 @Service
 public class SpecServiceImpl implements SpecService {
     @Autowired

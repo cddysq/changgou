@@ -5,9 +5,11 @@ import com.changgou.common.pojo.StatusCode;
 import lombok.AllArgsConstructor;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/16 19:49
- * @Description: 商品信息
+ * 商品信息
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 15:47
  **/
 @AllArgsConstructor
 public enum GoodsStatusEnum implements ExceptionMessage {

@@ -20,10 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Haotian
- * @Date: 2020/1/24 14:30
- * @Description: 品牌服务逻辑
- */
+ * 品牌服务逻辑
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 16:02
+ **/
 @Service
 public class BrandServiceImpl implements BrandService {
     @Autowired
@@ -46,7 +48,7 @@ public class BrandServiceImpl implements BrandService {
             throw new GoodsException( BrandStatusEnum.BRAND_REPEAT );
         }
         String brandLetter = brand.getLetter();
-        //品牌首字母不存在时，自动获取品牌名第一个首字母
+        // 品牌首字母不存在时，自动获取品牌名第一个首字母
         if (StrUtil.isEmpty( brandLetter )) {
             ChineseCharToEn chineseCharToEn = ChineseCharToEn.getInstance();
             String firstCapitalLetter = chineseCharToEn.getFirstCapitalLetter( brand.getName() );

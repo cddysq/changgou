@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Haotian
- * @Date: 2020/1/24 14:35
- * @Description: 品牌接口
- */
+ * 品牌接口
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 15:56
+ **/
 @RestController
-@CrossOrigin //开启跨域访问
+@CrossOrigin // 开启跨域访问
 @RequestMapping("/brand")
 public class BrandController {
     @Autowired

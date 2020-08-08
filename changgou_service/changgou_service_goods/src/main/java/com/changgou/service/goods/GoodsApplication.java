@@ -6,12 +6,14 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
- * @Author: Haotian
- * @Date: 2020/1/24 10:04
- * @Description: 商品服务启动类
+ * 商品服务启动类
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 15:46
  **/
 @SpringBootApplication
-@EnableEurekaClient //声明当前的工程是eureka客户端
+@EnableEurekaClient // 声明当前的工程是eureka客户端
 @MapperScan(basePackages = {"com.changgou.service.goods.dao"})
 public class GoodsApplication {
 

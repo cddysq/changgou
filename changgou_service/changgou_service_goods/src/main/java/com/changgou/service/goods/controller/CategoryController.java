@@ -13,9 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/22 18:21
- * @Description: 分类接口
+ * 分类接口
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 15:56
  **/
 @RestController
 @CrossOrigin
@@ -71,7 +73,7 @@ public class CategoryController {
     /**
      * 修改Category数据
      *
-     * @param id  Category id
+     * @param id       Category id
      * @param category 新Category数据
      * @return 修改结果
      */

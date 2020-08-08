@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Haotian
- * @Date: 2020/1/25 17:21
- * @Description: 规格通用接口
- */
+ * 规格通用接口
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 15:59
+ **/
 public interface SpecMapper extends Mapper<Spec> {
     /**
      * 根据商品分类名称查询规格列表

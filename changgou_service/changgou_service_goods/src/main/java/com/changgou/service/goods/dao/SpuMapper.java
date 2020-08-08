@@ -4,9 +4,11 @@ import com.changgou.goods.pojo.Spu;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/15 22:11
- * @Description: spu通用接口
+ * spu通用接口
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 15:59
  **/
 public interface SpuMapper extends Mapper<Spu> {
 }

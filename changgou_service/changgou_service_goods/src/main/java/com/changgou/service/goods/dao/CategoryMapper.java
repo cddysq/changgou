@@ -4,9 +4,11 @@ import com.changgou.goods.pojo.Category;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/16 18:17
- * @Description: 分类通用接口
- */
+ * 分类通用接口
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 15:59
+ **/
 public interface CategoryMapper extends Mapper<Category> {
 }

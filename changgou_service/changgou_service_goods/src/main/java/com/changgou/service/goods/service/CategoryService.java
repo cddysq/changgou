@@ -1,6 +1,5 @@
 package com.changgou.service.goods.service;
 
-
 import com.changgou.goods.pojo.Category;
 import com.github.pagehelper.Page;
 
@@ -8,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/18 18:40
- * @Description: 分类服务
+ * 分类服务
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 16:02
  **/
 public interface CategoryService {
     /**

@@ -14,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/16 18:25
- * @Description: sku 接口
+ * sku 接口
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 15:57
  **/
 @RestController
 @CrossOrigin

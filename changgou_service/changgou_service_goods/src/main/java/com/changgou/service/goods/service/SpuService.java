@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Haotian
- * @Date: 2020/2/15 22:16
- * @Description: Spu服务
+ * Spu服务
+ *
+ * @author Haotian
+ * @version 1.0.0
+ * @date 2020/8/8 16:00
  **/
 public interface SpuService {
     /**
