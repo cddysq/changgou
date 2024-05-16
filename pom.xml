@@ -48,7 +48,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.1.1</version>
+            <version>5.8.21</version>
         </dependency>
         <!--JAXB API异常依赖-->
         <dependency>
